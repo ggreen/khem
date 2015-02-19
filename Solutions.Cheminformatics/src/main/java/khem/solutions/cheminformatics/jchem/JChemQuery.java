@@ -1,8 +1,6 @@
 package khem.solutions.cheminformatics.jchem;
-import java.sql.Clob;
 
-import nyla.solutions.dao.DAO;
-import nyla.solutions.global.util.Debugger;
+
 //import chemaxon.formats.MolFormatException;
 //import chemaxon.sss.search.MolSearch;
 //import chemaxon.sss.search.MolSearchOptions;
