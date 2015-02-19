@@ -1,4 +1,4 @@
-package solutions.cheminformatics.openbabel;
+package khem.solutions.cheminformatics.openbabel;
 /*
 import org.openbabel.OBConversion;
 import org.openbabel.OBFormat;

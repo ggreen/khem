@@ -3,6 +3,7 @@ package solutions.cheminformatics.joelib;
 import java.io.IOException;
 
 import joelib2.io.BasicIOTypeHolder;
+import khem.solutions.cheminformatics.joelib.JOELibSearch;
 import nyla.solutions.global.io.IO;
 
 import org.junit.Assert;

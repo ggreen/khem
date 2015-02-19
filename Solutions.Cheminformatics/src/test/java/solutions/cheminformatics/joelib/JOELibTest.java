@@ -1,6 +1,7 @@
 package solutions.cheminformatics.joelib;
 
 import joelib2.molecule.Molecule;
+import khem.solutions.cheminformatics.joelib.JOELib;
 import nyla.solutions.global.io.IO;
 
 import org.junit.Assert;

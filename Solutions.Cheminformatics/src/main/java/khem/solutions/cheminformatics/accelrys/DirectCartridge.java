@@ -1,4 +1,4 @@
-package solutions.cheminformatics.accelrys;
+package khem.solutions.cheminformatics.accelrys;
 
 import java.sql.Clob;
 import java.sql.Connection;
@@ -17,7 +17,7 @@ import nyla.solutions.global.util.Debugger;
 
 /**
  * <!--  Use a single DataSource that contains all batched data -->
-  <bean id="solutions.cheminformatics.accelrys.DirectCartridge.dataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+  <bean id="khem.solutions.cheminformatics.accelrys.DirectCartridge.dataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
 		<property name="driverClassName" value="${directCartridgeDS.jdbc.driver}" />
 		<property name="url" value="${directCartridgeDS.jdbc.connection.url}" />
 		<property name="username" value="${directCartridgeDS.jdbc.user}" />

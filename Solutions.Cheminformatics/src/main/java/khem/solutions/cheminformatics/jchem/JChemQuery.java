@@ -1,4 +1,4 @@
-package solutions.cheminformatics.jchem;
+package khem.solutions.cheminformatics.jchem;
 import java.sql.Clob;
 
 import nyla.solutions.dao.DAO;

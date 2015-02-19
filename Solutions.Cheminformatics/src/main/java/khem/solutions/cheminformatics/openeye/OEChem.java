@@ -1,4 +1,4 @@
-package solutions.cheminformatics.openeye;
+package khem.solutions.cheminformatics.openeye;
 
 public class OEChem
 {

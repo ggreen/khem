@@ -1,4 +1,4 @@
-package solutions.cheminformatics.joelib;
+package khem.solutions.cheminformatics.joelib;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
