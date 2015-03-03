@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- (http://www.xmlspy.com) by Gregory Green -->
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app id="WebApp_1">
+	<display-name>frontController</display-name>
+	<description>frontController</description>	
+
+	<servlet>
+		<servlet-name>frontController</servlet-name>
+		<description>The Front Controller for the Application</description>
+		<servlet-class>nyla.solutions.global.web.controller.FrontControllerServlet</servlet-class>
+		<init-param>
+			<param-name>cmd</param-name>
+			<param-value>nyla.solutions.global.web.commas.CommasWebBridgeCommand</param-value>
+		</init-param>
+	</servlet>
+	<listener>
+	   <listener-class>nyla.solutions.global.web.commas.SessionCommandListener</listener-class>
+	</listener>
+    <!-- Servlet Mapping -->
+	<servlet-mapping>
+		<servlet-name>frontController</servlet-name>
+		<url-pattern>/controller/*</url-pattern>
+	</servlet-mapping>
+	
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/core</taglib-uri>
+        <taglib-location>/WEB-INF/c.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/core_rt</taglib-uri>
+        <taglib-location>/WEB-INF/c-rt.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/xml</taglib-uri>
+        <taglib-location>/WEB-INF/x.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/xml_rt</taglib-uri>
+        <taglib-location>/WEB-INF/x-rt.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/fmt</taglib-uri>
+        <taglib-location>/WEB-INF/fmt.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/fmt_rt</taglib-uri>
+        <taglib-location>/WEB-INF/fmt-rt.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/sql</taglib-uri>
+        <taglib-location>/WEB-INF/sql.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://java.sun.com/jstl/sql_rt</taglib-uri>
+        <taglib-location>/WEB-INF/sql-rt.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>/jstl-examples-taglib</taglib-uri>
+        <taglib-location>/WEB-INF/jstl-examples.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://jakarta.apache.org/taglibs/standard/scriptfree</taglib-uri>
+        <taglib-location>/WEB-INF/scriptfree.tld</taglib-location>
+    </taglib>
+
+    <taglib>
+        <taglib-uri>http://jakarta.apache.org/taglibs/standard/permittedTaglibs</taglib-uri>
+        <taglib-location>/WEB-INF/permittedTaglibs.tld</taglib-location>
+    </taglib>
+	
+</web-app>

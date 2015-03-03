@@ -1,0 +1,152 @@
+<!-- This example shows the use of JavaScript with the JDraw Editor.
+     It follows the Document Object Model (DOM) for JavaScript by
+     using id and getElementById.
+     To test:
+     (1) Click a template, then click the canvas.
+     (2) Click getMolString.
+     (3) Edit the molfile so that the first C is F.
+     (4) Click setMolString.
+     (5) The structure display is updated. -->
+
+<html>
+<head>
+
+<title>JDrawEditor example</title>
+</head>
+<body>
+
+<form action="javascript:void(0);">
+<table border="1">
+    <tr>
+        <td colspan="2">
+            <applet
+              code     = "com.symyx.draw.JDrawEditor"
+              name     = "JDrawEditor"
+              id       = "myJDrawApplet"
+              width    = "800"
+              height   = "500"
+              hspace   = "0"
+              vspace   = "0"
+              align    = "middle"
+              archive  = "CsInline.jar,jdrawcore.jar,jdrawapplet.jar">
+
+
+			  <!-- To avoid possible DirectDraw issues -->
+			  <param name="java_arguments" value="-Xmx256m -Dsun.java2d.noddraw=true">
+
+			  <!-- If you want to test the ability to detect a change to the structure:
+			  <param name="OnStructureChangedJS" value="alert('OnStructureChanged event fired: javascript executed');"> -->
+
+			  <!-- If you want to hide the atom tool bar:
+			  <param name="showAtomsToolBar" value="off"> -->
+
+			  <!-- If you want to disable atoms coloring:
+			  <param name="colorAtomsByType" value="off"> -->
+
+			  <!-- For other parameters, such as labelHeight, bondLabelSize, hydrogenDisplayMode, polAtomDisplayMode, absStereoLabelText,
+			       see the javadoc for JDrawApplet -->
+            </applet>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <!-- JavaScript function calls associated with molfile or chimestring
+                 in textarea below canvas -->
+            <textarea name="molData" cols="80" rows="15"></textarea>
+        </td>
+        <td valign="top" align="center" >
+            <br />
+            <button onclick="javascript:molData.value = getMolString();">getMolString</button>
+            <br />
+            <button onclick="javascript:setMolString(molData.value);">setMolString</button>
+            <br />
+            <button onclick="javascript:molData.value = getChimeString();">getChimeString</button>
+            <br />
+            <button onclick="javascript:setChimeString(molData.value);">setChimeString</button>
+            <br />
+            <br />
+            <button onclick="javascript:molData.value = getRxnString();">getRxnString</button>
+            <br />
+            <br />
+            <button onclick="javascript:clearMolecule();">Clear</button>
+        </td>
+    </tr>
+</table>
+Hydrogen Display:
+<select name="hdisplay" onChange="javascript:JDrawEditor.preferences().setHydrogenDisplayMode(document.forms[0].hdisplay.selectedIndex)">
+<option>Off</option>
+<option selected>Hetero</option>
+<option>Terminal</option>
+<option>Terminal and Hetero</option>
+<option>On</option>
+</select>
+<br />
+Atoms ToolBar:
+<select name="aToolBar" onChange="javascript:JDrawEditor.showAtomsToolBar(document.forms[0].aToolBar.selectedIndex == 0)">
+<option selected>On</option>
+<option>Off</option>
+</select>
+<br />
+Color Atoms By Type:
+<select name="colorAtoms" onChange="javascript:JDrawEditor.preferences().setColorAtomsByType(document.forms[0].colorAtoms.selectedIndex == 0)">
+<option selected>On</option>
+<option>Off</option>
+</select>
+<br>
+<input name="subscriptratio" cols="10" rows="1" value="0.66"/>
+<button onclick="javascript:JDrawEditor.setSubscriptFontRatio(subscriptratio.value);">set subscript font ratio (%)</button>
+<br>
+<input name="fontsize" cols="10" rows="1" value="10" />
+<button onclick="javascript:JDrawEditor.setDefaultFontSize(fontsize.value);">set font size (points)</button>
+<br>
+<input name="bondlength" cols="10" rows="1"value="1.0" />
+<button onclick="javascript:JDrawEditor.setDefaultBondLength(bondlength.value);">set standard bond length (cm) </button>
+
+</form>
+
+
+<!-- If you want to test the ability to detect a change to the structure:
+<script>JDrawEditor.setOnStructureChangedJS("alert('OnStructureChanged event fired: javascript executed');");</script>
+-->
+
+<!-- Define JavaScript functions associated with the four buttons -->
+<script>
+      function getMolString()
+      {
+        var applet = document.getElementById("myJDrawApplet");
+        return applet.getMolString();
+      }
+
+      function setMolString(molstring)
+      {
+        var applet = document.getElementById("myJDrawApplet");
+        applet.setMolString(molstring);
+      }
+
+      function getChimeString()
+      {
+        var applet = document.getElementById("myJDrawApplet");
+        return applet.getChimeString();
+      }
+
+      function setChimeString(molstring)
+      {
+        var applet = document.getElementById("myJDrawApplet");
+        applet.setChimeString(molstring);
+      }
+
+      function getRxnString()
+      {
+        var applet = document.getElementById("myJDrawApplet");
+        return applet.getRxnString();
+      }
+
+      function clearMolecule()
+      {
+        document.getElementById("myJDrawApplet").clearMolecule();
+      }
+
+</script>
+
+</body>
+</html>
