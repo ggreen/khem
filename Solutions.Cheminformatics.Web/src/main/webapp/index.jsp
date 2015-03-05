@@ -132,8 +132,11 @@
 			        
 			        -->
 			        <div class="structureView">
+			        
+			          <!-- IE: com.symyx.draw.JDrawRenderer and com.merck.mrl.chem.ui.JavaDrawRender  Mac  
+			          			khem.solutions.cheminformatics.draw.KhemJDrawRender-->
 			            <applet
-			              code     = "com.symyx.draw.JDrawRenderer"
+			              code     = "com.symyx.draw.JDrawRenderer"    
 			              name     = "jdrawRendererApplet"
 			              id       = "jdrawRendererApplet"
 			              width    = "300"
@@ -142,7 +145,7 @@
 			              vspace   = "0"
 			              align    = "middle"
 			              
-			              archive  = "/khem.solutions.cheminformatics.web/jdraw/CsInline.jar,/khem.solutions.cheminformatics.web/jdraw/jdrawcore.jar,/khem.solutions.cheminformatics.web/jdraw/jdrawapplet.jar">
+			              archive  = "/khem.solutions.cheminformatics.web/jdraw/CsInline.jar,/khem.solutions.cheminformatics.web/jdraw/jdrawcore.jar,/khem.solutions.cheminformatics.web/jdraw/jdrawapplet.jar,/khem.solutions.cheminformatics.web/jdraw/khem.solutions.cheminformatics-1.0.jar">
 				          <param name="OnMouseLeftClickJS" value="mmRender.openEditor();">
 						  <!-- To avoid possible DirectDraw issues -->
 						  <param name="java_arguments" value="-Xmx256m -Dsun.java2d.noddraw=true">
@@ -180,7 +183,7 @@
 			         <div id="orStructure">
 			         	OR <br/>
 			         	
-						      <applet
+						      <!--  applet
 						              code     = "com.symyx.draw.JDrawEditor"
 						              name     = "JDrawOREditor"
 						              id       = "jdrawOREditorApplet"
@@ -189,7 +192,7 @@
 						              hspace   = "0"
 						              vspace   = "0"
 						              align    = "middle"
-						              archive  = "<c:url value="/jdraw/CsInline.jar"/>,<c:url value="/jdraw/jdrawcore.jar"/>,<c:url value="/jdraw/jdrawapplet.jar"/>,<c:url value="/jdraw/plugin.jar"/>">
+						              archive  = "<c:url value="/jdraw/CsInline.jar"/>,<c:url value="/jdraw/jdrawcore.jar"/>,<c:url value="/jdraw/jdrawapplet.jar"/>,<c:url value="/jdraw/plugin.jar"/>,<c:url value="/jdraw/merck.asap.integration.jar"/>">
 						
 						
 									  <!-- To avoid possible DirectDraw issues -->
@@ -204,14 +207,14 @@
 									  			
 						              <param name="labelHeight" value="0.45"/> 
 						              <param name="showAtomsToolBar" value="false"/>
-						            </applet>
+						            </applet-->
 			         	</div>
 			         	
 			         	
 			         	<div id="notStructure">
 			         	NOT <br/>
 			         	
-						      <applet
+						      <!-- applet
 						              code     = "com.symyx.draw.JDrawEditor"
 						              name     = "JDrawNOTEditor"
 						              id       = "jdrawNOTEditorApplet"
@@ -231,7 +234,7 @@
 									  			
 						              <param name="labelHeight" value="0.45"/> 
 						              <param name="showAtomsToolBar" value="false"/>
-						            </applet>
+						            </applet -->
 			         	</div>
 			         
 			            <div>
@@ -301,7 +304,7 @@
     <div id="jdrawEditorPanel" style="display:none">
       <applet
               code     = "com.symyx.draw.JDrawEditor"
-              name     = "JDrawEditor"
+              name     = "jdrawEditorApplet"
               id       = "jdrawEditorApplet"
               width    = "800"
               height   = "500"

@@ -89,6 +89,7 @@ function ALDaSMerckView(theAJAX,contextRoot,schemeCacheId,libraryId,nodeId)
 	   this.constructResultsMenuHTML = constructResultsMenuHTML;
 	    function constructResultsMenuHTML()
 	    {
-	  	 return " &nbsp;<input type='button' value='Import' onclick='aldasMerckRender.importSelected();'/>";  
+	  	 //return " &nbsp;<input type='button' value='Import' onclick='aldasMerckRender.importSelected();'/>";
+	    	return " &nbsp;";
 	    }//---------------------------------------------------------------------------- 
 }

@@ -62,10 +62,10 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
         	    mmRender.materialCriteria = {"locations":[{"site":"","building":"","floor":"","room":"","subLocation":"","name":""}],
         	    		                "pageCriteria":{"id":sessionID,"beginIndex":"1","size":"300","savePagination":"true"},
         	    		                "structureCriteria":{"pageCriteria":{"id":sessionID,"beginIndex":"1","size":"300","savePagination":"true",
-        	    		                "className":"com.merck.mrl.asap.integration.services.data.Molecule"},
+        	    		                "className":" khem.solutions.cheminformatics.data.Molecule"},
         	    	 "molString": this.getMolString()
 
-        	    		 ,"sources":["ACD","MCIDB","MERCKACD"],"structureKeys":[{"id":"","molKey":"","sourceCode":"","isActive":""}],"casNum":"","name":"",
+        	    		 ,"sources":["eMolecules"],"structureKeys":[{"id":"","molKey":"","sourceCode":"","isActive":""}],"casNum":"","name":"",
         	    		 "operation": operationValue}};
                  //Get form
                  var renderResultsData = web.toJson(mmRender.materialCriteria);
@@ -120,11 +120,16 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
 	   this.transferMolecule = transferMolecule;
 	   function transferMolecule()
        {
-     	  	var jdrawEditorApplet = document.getElementById("jdrawEditorApplet");
-     	    var JDrawRendererApplet = document.getElementById("jdrawRendererApplet");
+     	  	//var jdrawEditorApplet = document.getElementById("jdrawEditorApplet");
+     	    //var JDrawRendererApplet = document.getElementById("jdrawRendererApplet");
      	    
-     	   JDrawRendererApplet.setMolString(jdrawEditorApplet.getMolString());
-     	      
+     	  	//var applet = document.getElementById("jdrawRendererApplet");
+     	  	//applet.setMolString(jdrawEditorApplet.getMolString());
+     	  	
+     	  	var molString = jdrawEditorApplet.getMolString();
+     	  	
+     	  	jdrawRendererApplet.setMolString(molString);
+		   
        	  	// var editorWindow = window.open("<c:url value="/editor.jsp"/>","editor","menubar=no,scrollbars=yes,toolbar=no,location=no,height=800,width=850");
             var editorPanel = document.getElementById("jdrawEditorPanel");
             
@@ -184,7 +189,7 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
            {
          	return false;  
            }
-           else if("" == text || text.length == 0 || "[]" == text)
+           else if("" == text || "null" == text || text.length == 0 || "[]" == text)
             {
         	     println("No data found");
         	   return false;
@@ -374,7 +379,7 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
             var renderResultsData = web.toJson(mmRender.moleculeObjects.pageCriteria);
                   
                         
-            var executeFunctionUrl = this.contextRoot+"controller/commas/solutions.global.web.commas.iteration.GetPagingCommand.getPaging";
+            var executeFunctionUrl = this.contextRoot+"controller/commas/Paging.getPaging";
      
            	 web.openAJAX(mmAJAX,this.renderMoleculeNextResults, "POST", executeFunctionUrl, true, renderResultsData);	
       
@@ -399,7 +404,7 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
             renderMoleculeSummaryCount("-1");
             
             
-            var executeFunctionUrl = contextRoot+"controller/commas/solutions.global.web.commas.iteration.GetPagingCommand.count";
+            var executeFunctionUrl = contextRoot+"controller/commas/Paging.count";
      
            	 web.openAJAX(mmAJAX,renderPaginationCount, "POST", executeFunctionUrl, true, pageCriteriaJSON);	
       
@@ -481,7 +486,7 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
       function  renderContainerResults() 
       {
     	  var text = web.getResponseText(mmAJAX);
-    	  
+    	   	  
     	  //output.innerHTML = outText;	    
     	  
           
@@ -520,7 +525,6 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
             responseHTML= responseHTML+"<tr class='"+rowClass+"'  onmouseover=\"mmRender.highlightContainerRow(this,'hovered',"+i+")\" onmouseout=\"mmRender.changeClass(this,'"+rowClass+"')\">"
           	 +"<td>"+mmRender.format( mmRender.containerObjects.collection[i].source)+"</td>"
             +"<td>"+mmRender.format( mmRender.containerObjects.collection[i].structKey)+"</td>"
-       	 //+"<td><img src='"+contextRoot+"controller?cmd=com.merck.mrl.asap.integration.services.web.MoleculeImageCommand&structKey="+containerObjects.collection[i].structKey+"&structSource="+containerObjects.collection[i].structSource+"'/></td>"
        	 +"<td>"+mmRender.format( mmRender.containerObjects.collection[i].barCode)+"</td>"
        	 +"<td>"+mmRender.format( mmRender.containerObjects.collection[i].originalAmount)
        	 +" "+mmRender.format( mmRender.containerObjects.collection[i].originalAmountUnits)+"</td>"
@@ -587,19 +591,30 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
      	 if(mmRender.moleculeObjects.collection == undefined)
      		 return false;
      	 
-     	 var summaryCountHTML = "Showing "+mmRender.moleculeObjects.collection.length+" results of About: ";
+     	 var summaryCountHTML = "Showing "+mmRender.moleculeObjects.collection.length+" of  ";
      	 if(countText == "-1")
      	 {
      		 
      		summaryCountHTML = summaryCountHTML  + "<img src='"+contextRoot+"common/images/progress.gif'/>";
          }
-     	 else
+       	 else if(countText != null && countText.length > 1)
      	 {
-     		summaryCountHTML = summaryCountHTML  + countText;
+       		 
+       		 //strip quotes
+       		countText = countText.replace(/\"/g,"");
+      		
+       		var countInteger = parseInt(countText);
+       		var totalCount = mmRender.moleculeObjects.collection.length + countInteger;
+       		
+     		summaryCountHTML = summaryCountHTML  + totalCount;
      		 
      	 }
-         
-     	
+     	 else
+     	 {
+     		summaryCountHTML = summaryCountHTML  + "About:" + countText;
+     		 
+     	 }
+     	summaryCountHTML = summaryCountHTML + " results";
      	
      	 
      	 if( countText == "\""+mmRender.moleculeObjects.collection.length+"\"")
