@@ -3,6 +3,7 @@ package khem.solutions.cheminformatics.joelib;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+
 import joelib2.io.BasicIOType;
 import joelib2.io.BasicIOTypeHolder;
 import joelib2.io.BasicReader;
@@ -15,6 +16,7 @@ import joelib2.molecule.Molecule;
 import joelib2.process.types.DistanceCalculation;
 import joelib2.smarts.BasicSMARTSPatternMatcher;
 import joelib2.smarts.SMARTSPatternMatcher;
+import nyla.solutions.global.exception.SystemException;
 import nyla.solutions.global.io.IO;
 
 /**
@@ -37,15 +39,33 @@ public class JOELibSearch
 	 * @throws Exception
 	 */
     public boolean isSubSearch(String queryMol,String mol)
-    throws Exception
     {
+    	if(mol == null || mol.length() == 0) {
+    		return false;
+    	}
     	
-        BasicSMARTSPatternMatcher basicsmartspatternmatcher = new BasicSMARTSPatternMatcher();
-        System.out.println("... generate atom expression...");
-        basicsmartspatternmatcher.init(JOELib.toSMILES(queryMol));
-        
-                  	
-    	return basicsmartspatternmatcher.match(JOELib.toMolecule(mol));    	
+    	if(queryMol == null || queryMol.length() == 0)
+    	{
+    		return false;
+    	}
+    	
+        try
+		{
+			BasicSMARTSPatternMatcher basicsmartspatternmatcher = new BasicSMARTSPatternMatcher();
+			basicsmartspatternmatcher.init(JOELib.toSMILES(queryMol));
+			
+			Molecule molecule = JOELib.toMolecule(mol);
+			
+			return basicsmartspatternmatcher.match(molecule);
+		}
+		catch (MoleculeIOException e)
+		{
+			throw new SystemException(e.getMessage(),e);
+		}
+		catch (IOException e)
+		{
+			throw new SystemException(e.getMessage(),e);
+		}    	
     }
 	/**
 	 * Check if the query is a substructure of a molecule

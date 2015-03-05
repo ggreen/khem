@@ -2,6 +2,9 @@ package khem.solutions.cheminformatics.data;
 
 import java.io.Serializable;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.gemfire.mapping.Region;
+
 import nyla.solutions.global.data.Identifier;
 import nyla.solutions.global.data.Nameable;
 
@@ -11,6 +14,7 @@ import nyla.solutions.global.data.Nameable;
  * @author Gregory Green
  *
  */
+@Region("molecules")
 public class Molecule implements Serializable, Comparable<Molecule>, Nameable, Identifier
 {
 	/**
@@ -312,6 +316,7 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 	private String weight;
 	private String formula;
 	private String molString;
+	@Id
 	private String structureKey;
 	private String sourceCode;
 	private String canonicalSMILES;

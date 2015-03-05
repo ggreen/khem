@@ -1,7 +1,6 @@
 package khem.solutions.cheminformatics;
 
 import java.util.Collection;
-
 import khem.solutions.cheminformatics.data.ChemicalAnnotation;
 import khem.solutions.cheminformatics.data.Container;
 import khem.solutions.cheminformatics.data.KHEMCriteria;

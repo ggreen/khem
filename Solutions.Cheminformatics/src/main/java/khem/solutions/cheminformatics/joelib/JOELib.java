@@ -61,6 +61,10 @@ public class JOELib
 	public static Molecule toMolecule(String moleculeText)
 	throws IOException, MoleculeIOException
 	{
+		if(moleculeText == null || moleculeText.length() == 0) {
+			return null;
+		}
+		
 		ByteArrayInputStream bytearrayinputstream= new ByteArrayInputStream(moleculeText.getBytes());
 			
 		BasicConformerMolecule basicConformerMolecule = new BasicConformerMolecule(SDF_TYPE,SDF_TYPE);

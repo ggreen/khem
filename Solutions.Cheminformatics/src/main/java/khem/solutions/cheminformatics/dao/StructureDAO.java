@@ -27,8 +27,7 @@ public interface StructureDAO extends Disposable
 	 * @param structureCriteria
 	 * @return
 	 */
-	Paging<Molecule> selectMoleculesByMol(MaterialCriteria structureCriteria)
-	throws SQLException;
+	Paging<Molecule> findMoleculesByMol(MaterialCriteria structureCriteria);
 	
 
 	/**
@@ -46,8 +45,7 @@ public interface StructureDAO extends Disposable
 	 * @param structureCriteria the structure criteria
 	 * @return the collection of structure keys
 	 */
-	Paging<StructureKey> selectStructKeysByMol(MaterialCriteria structureCriteria)
-	throws SQLException;
+	Paging<StructureKey> findStructKeysByMol(MaterialCriteria structureCriteria);
 	
 	
 	/**
@@ -56,8 +54,7 @@ public interface StructureDAO extends Disposable
 	 * @return the Molecule details
 	 * @throws SQLException
 	 */
-	Molecule selectMoleculeByStructureKey(String structureKey)
-	throws SQLException;
+	Molecule findMoleculeByStructureKey(String structureKey);
 	
 	
 	/**
@@ -65,17 +62,15 @@ public interface StructureDAO extends Disposable
 	 * @param structureCriteria the structure criteria
 	 * @return the structure key
 	 */
-	Collection<StructureKey> selectStructKeysByCasOrMolName(
-			MaterialCriteria structureCriteria)
-	throws SQLException;
+	Collection<StructureKey> findStructKeysByCasOrMolName(
+			MaterialCriteria structureCriteria);
 	
 	/**
 	 * Select the CAS Numbers by a structure key
 	 * @param materialCriteria the material criteria
 	 * @return the list of CAS numbers
 	 */
-	public String[] selectCasNumsByStructureKey(StructureKey structureKey)
-	throws SQLException;
+	public String[] findCasNumsByStructureKey(StructureKey structureKey);
 	
 	
 	/**
@@ -83,23 +78,19 @@ public interface StructureDAO extends Disposable
 	 * @param materialCriteria the structure criteria
 	 * @return the structure keys
 	 */
-	Collection<StructureKey> selectStructKeysByMolName(MaterialCriteria materialCriteria)
-	throws SQLException;
+	Collection<StructureKey> findStructKeysByMolName(MaterialCriteria materialCriteria);
 	
 	/**
 	 * Select Structure key
 	 * @param structureKeyId the molecular number identifier (L-number,MFCD#, MERCK#)
 	 * @return the structure key
 	 */
-	StructureKey selectStructKeyById(String structureKeyId)
-	throws SQLException;
-	
+	StructureKey findStructureKeyById(String structureKeyId);
 	
 	/**
 	 * 
 	 * @param molString the MOL string to compare
 	 * @return
 	 */
-	Collection<StructureKey> flexMatchStructureKeysByMol(String molString)
-	throws SQLException;
+	Collection<StructureKey> findFlexMatchStructureKeysByMol(String molString);
 }

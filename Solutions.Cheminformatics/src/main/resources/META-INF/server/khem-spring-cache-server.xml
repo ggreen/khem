@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:gfe="http://www.springframework.org/schema/gemfire"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/gemfire  
+	http://www.springframework.org/schema/gemfire/spring-gemfire.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util.xsd
+		http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+       ">
+    <!-- context:property-placeholder location="classpath:config.properties"/-->
+    <context:component-scan base-package="nyla.solutions.gedi.gemfire">
+    </context:component-scan>
+    <context:annotation-config/>
+    <gfe:annotation-driven/>
+    	
+		<util:properties id="gemfire-props">
+			<prop key="log-level">fine</prop>	
+			<!-- prop key="distributed-system-id">0</prop>
+			<prop key="groups">default</prop-->
+		</util:properties>
+
+         <!--  pdx-disk-store="pdxDiskStore" -->
+		<gfe:cache properties-ref="gemfire-props"  copy-on-read="false"  pdx-serializer-ref="pdxSerializer">
+		
+		</gfe:cache>
+		
+		<bean id="pdxSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer">
+			<property name="serializableClasses">
+				<array>
+					<value>khem.solutions.cheminformatics.data.*</value>
+				</array>
+			</property>
+		</bean>
+
+		<!-- Note the SpEL expression here used to dynamically configure an available 
+		
+		gfe:cache-server port="#{portGenerator.generatePort(40404,40406)}" />
+		
+			port in the given range -->
+		<!-- gfe:cache-server port="40440">
+		</gfe:cache-server-->
+
+    <!-- bean id="portGenerator"
+			class="org.springframework.data.gemfire.examples.util.ServerPortGenerator" /-->
+
+	 <gfe:transaction-manager id="gemfireTransactionManager" cache-ref="gemfireCache"  copy-on-read="true"/>
+	  <tx:annotation-driven/>		
+		<gfe:partitioned-region id="molecules">
+	</gfe:partitioned-region>
+			
+    <bean id="moleculesTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
+    	<constructor-arg ref="molecules"></constructor-arg>
+    </bean>
+        
+</beans>

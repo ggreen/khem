@@ -9,7 +9,6 @@ import khem.solutions.cheminformatics.data.StructureKey;
 
 
 public interface StructureFinder extends Runnable, Callable<Collection<Molecule>>
-
 {
 	/**
 	 * 

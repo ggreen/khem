@@ -1,5 +1,8 @@
 package solutions.cheminformatics.jchem;
 
+import org.junit.Ignore;
+
+@Ignore
 public class JChemQueryTest
 {
 	

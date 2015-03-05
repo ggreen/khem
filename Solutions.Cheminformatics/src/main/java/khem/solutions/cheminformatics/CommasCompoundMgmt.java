@@ -231,12 +231,8 @@ public class CommasCompoundMgmt implements CompoundService
 			   if (key == null || key.length() == 0)
 				throw new RequiredException("key");
 			   
-			   return dao.selectMoleculeByStructureKey(key);
+			   return dao.findMoleculeByStructureKey(key);
 		   }
-		  catch(SQLException e)
-		  {
-			  throw new SystemException(e);
-		  }
 		   finally
 		   {
 			   if(dao != null)
@@ -428,7 +424,7 @@ public class CommasCompoundMgmt implements CompoundService
 		{
 			dao =  ServiceFactory.getInstance().create(InventoryDAO.class);
 			
-			Collection<Container> containers = dao.selectContainers(containerCriteria);
+			Collection<Container> containers = dao.findByCriteria(containerCriteria);
 			
 			if(containers == null || containers.isEmpty())
 				return null; //empty list
@@ -444,6 +440,6 @@ public class CommasCompoundMgmt implements CompoundService
 
 	
 	private final ExecutorBoss executorBoss;
-	private static int threadCount = Config.getPropertyInteger(CommasCompoundMgmt.class,"threadCount");
+	private static int threadCount = Config.getPropertyInteger(CommasCompoundMgmt.class,"threadCount",3);
 
 }

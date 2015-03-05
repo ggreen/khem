@@ -3,6 +3,7 @@ package solutions.cheminformatics.openbabel;
 import khem.solutions.cheminformatics.openbabel.OpenBabelSearch;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -32,6 +33,7 @@ Now, run the example application. The output should be as shown above.
  * @author Gregory Green
  *
  */
+@Ignore
 public class OpenBabelSearchTest
 {
 
