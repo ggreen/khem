@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import joelib2.feature.Description;
+import joelib2.feature.types.MolecularWeight;
 import joelib2.io.BasicIOTypeHolder;
 import joelib2.io.BasicReader;
 import joelib2.io.IOType;
@@ -51,6 +53,10 @@ public class JOELib
 				
 		return smiles;
    }// --------------------------------------------------------
+	public static double  toWeight(Molecule molecule)
+	{
+		return MolecularWeight.getMolecularWeight(molecule);
+	}// --------------------------------------------------------
 	/**
 	 * Convert from MDL to to a molecule object
 	 * @param moleculeText

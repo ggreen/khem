@@ -7,8 +7,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Iterator;
 
+import nyla.solutions.global.exception.ConnectionException;
+import nyla.solutions.global.exception.NotImplementedException;
 import nyla.solutions.global.exception.SetupException;
+import nyla.solutions.global.exception.SystemException;
 import nyla.solutions.global.util.Text;
 
 
@@ -98,7 +102,7 @@ GREEN PILLS
  * @author Gregory Green
  *
  */
-public class SDFileReader implements Closeable
+public class SDFileReader implements Closeable, Iterable<SDFEntry>, Iterator<SDFEntry>
 {
 	/**
 	 * END_OF_ENTRY = "$$$$"
@@ -215,12 +219,15 @@ public class SDFileReader implements Closeable
 	{
 		if(reader == null)
 		{
-			throw new SetupException("Reader is null, try calling the open() method");
+			this.open();
 		}
 		
 		if(state == ParseState.EOF)
+		{
+			 doesHaveNext = false; 
 			 return null;
-		 
+		}
+		
 		SDFEntry  entry = new SDFEntry();
 		
 		state = processMOL(reader,entry);
@@ -231,7 +238,11 @@ public class SDFileReader implements Closeable
 		String molString = entry.getMolString();
 		
 		if(molString == null || molString.length() == 0)
+		{
+			doesHaveNext = false;
+			
 			return null;
+		}
 		
 		return entry;
 	}// --------------------------------------------------------
@@ -319,6 +330,41 @@ public class SDFileReader implements Closeable
 		return nextState(line, ParseState.PARAMATERS);
 
 	}// --------------------------------------------------------
+	@Override
+	public boolean hasNext()
+	{	
+		return doesHaveNext;
+	}
+
+	@Override
+	public SDFEntry next()
+	{
+		
+		try
+		{
+			return this.nextSDFEntry();
+		}
+		catch (FileNotFoundException e)
+		{
+			throw new ConnectionException("Cannot read file:"+this.file,e);
+		}
+		catch (IOException e)
+		{
+			throw new ConnectionException("Error reading file:"+this.file,e);
+		}
+	}// --------------------------------------------------------
+
+	@Override
+	public void remove()
+	{
+		throw new NotImplementedException();
+	}// --------------------------------------------------------
+
+	@Override
+	public Iterator<SDFEntry> iterator()
+	{
+		return this;
+	}
 	/**
 	 * 
 	 * @param line the line to parse
@@ -334,7 +380,9 @@ public class SDFileReader implements Closeable
 		else
 			return defaultNextState;	
 	}// --------------------------------------------------------
+	private boolean doesHaveNext = true;
 	private ParseState state = ParseState.MOL;
 	private BufferedReader reader = null;
 	private final File file;
+	
 }

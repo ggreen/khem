@@ -1,9 +1,9 @@
 package khem.solutions.cheminformatics.dao;
 
 import java.util.Collection;
-
 import nyla.solutions.global.data.Nameable;
 import nyla.solutions.global.exception.SystemException;
+
 import nyla.solutions.global.patterns.servicefactory.ServiceFactory;
 import khem.solutions.cheminformatics.StructureFinder;
 import khem.solutions.cheminformatics.data.MaterialCriteria;
@@ -105,7 +105,8 @@ public abstract class AbstractStructureFinder implements StructureFinder, Nameab
 	{
 		this.name = name;
 	}
-
+	
+	
 	public abstract Collection<Molecule> searchMolecules(MaterialCriteria structureCriteria);
 	private RuntimeException exception = null;
 	private Collection<StructureKey> results;

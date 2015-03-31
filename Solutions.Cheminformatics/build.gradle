@@ -41,7 +41,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-core:2.5.1'
     compile 'xom:xom:1.2.5'
     compile 'log4j:log4j:1.2.17'
-     
+	compile 'org.mongodb:mongo-java-driver:2.10.1'
+	     
     compile group: 'nyla.solutions.global', name: 'nyla.solutions.global', version: '1.0'
     compile group: 'nyla.solutions.dao', name: 'nyla.solutions.dao', version: '1.0'
     compile group: 'nyla.solutions.dao.mongoDb', name: 'nyla.solutions.dao.mongoDb', version: '1.0'
@@ -49,6 +50,7 @@ dependencies {
     compile group: 'jdrawcore', name: 'jdrawcore'
     compile group: 'jdrawapplet', name: 'jdrawapplet'
     compile 'org.reflections:reflections:0.9.9'
+    compile 'org.mongodb:mongo-java-driver:2.10.1'
     	
     testCompile group: 'joelib2', name: 'joelib2'
     testCompile group: 'junit', name: 'junit', version: '4.+'

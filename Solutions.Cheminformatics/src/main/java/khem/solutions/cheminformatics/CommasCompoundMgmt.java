@@ -1,10 +1,12 @@
 package khem.solutions.cheminformatics;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
+
 import khem.solutions.cheminformatics.dao.ChemistryDAO;
 import khem.solutions.cheminformatics.dao.InventoryDAO;
 import khem.solutions.cheminformatics.dao.StructureDAO;
@@ -244,18 +246,18 @@ public class CommasCompoundMgmt implements CompoundService
 	 */
 	@Override
 	@CMD(advice=JsonAdvice.JSON_ADVICE_NAME)
-	public Paging<Molecule> findMolecules(KHEMCriteria asapCriteria)
+	public Paging<Molecule> findMolecules(KHEMCriteria khemCriteria)
 	{  
 		  //Find structures
 		  String[] sources = null;
 		
 		  
-		  MaterialCriteria materialCriteria = asapCriteria.getStructureCriteria();
+		  MaterialCriteria materialCriteria = khemCriteria.getStructureCriteria();
 		   
 		  PageCriteria pageCriteria = materialCriteria.getPageCriteria();
 				
 		   if(pageCriteria == null)
-			throw new RequiredException("pageCriteria");
+			throw new RequiredException("KHEMCriteria.materialCriteria.pageCriteria");
 				
 			String molString = materialCriteria.getMolString();
 				
@@ -265,7 +267,7 @@ public class CommasCompoundMgmt implements CompoundService
 			sources = materialCriteria.getSources();
 				
 			if(sources == null || sources.length == 0)
-				throw new RequiredException("structureCriteria.sources");
+				throw new RequiredException("KHEMCriteria.materialCriteria.structureCriteria.sources");
 		    
 			
 			//clear previous page data
@@ -325,10 +327,20 @@ public class CommasCompoundMgmt implements CompoundService
 		
 		for (Collection<Molecule> collection : moleculeCollection)
 		{
-			molecules = (PagingCollection<Molecule>)collection;
 			
+			if(collection instanceof ArrayList)
+			{
+				ArrayList<Object> al = (ArrayList)collection;
+				
+				collection = (Collection<Molecule>)al.iterator().next();
+			}
+			
+	
+			
+			 molecules = (PagingCollection<Molecule>) collection;
+			 
 			if(molecules == null || molecules.isEmpty())
-				continue;
+					continue;
 			
 			if(!molecules.isLast())
 				isLast = false;

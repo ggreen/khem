@@ -2,13 +2,9 @@ package khem.solutions.cheminformatics.dao.gemfire;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.gemfire.GemfireTemplate;
-
-import com.gemstone.gemfire.cache.Region;
-
+import nyla.solutions.global.patterns.iteration.PageCriteria;
 import nyla.solutions.global.patterns.iteration.Paging;
 import nyla.solutions.global.patterns.iteration.PagingCollection;
 import khem.solutions.cheminformatics.dao.StructureDAO;
@@ -37,23 +33,34 @@ public class StructureGemFireDAO implements StructureDAO
 	 */
 	public Paging<Molecule> findMoleculesByMol(MaterialCriteria structureCriteria) 
 	{
+		if(structureCriteria == null)
+			return null;
 		
 		JOELibSearch joeLibSearch = new JOELibSearch();
 		Collection<Molecule> moleculeCollection = new ArrayList<Molecule>();
 		
 		String queryMol = structureCriteria.getMolString();
 		
+		PageCriteria pageCriteria = structureCriteria.getPageCriteria();
+		
+		int pageSize = pageCriteria.getSize();
+		
 		for (Molecule molecule : moleculeRepository.findAll())
 		{
 			if(joeLibSearch.isSubSearch(queryMol, molecule.getMolString())){
 				moleculeCollection.add(molecule);		
-			}
-			
-		}
 				
+				if(pageSize > 0 && moleculeCollection.size() >= pageSize)
+				{
+					break; //TODO: continue in backup
+				}
+			}
+		}
+		
+		//TODO: use SDF pageable
 		
 		PagingCollection<Molecule> pCollect = new PagingCollection<Molecule> 
-						(moleculeCollection, structureCriteria.getPageCriteria());
+						(moleculeCollection, pageCriteria);
 		
 		return pCollect;
 	}// --------------------------------------------------------

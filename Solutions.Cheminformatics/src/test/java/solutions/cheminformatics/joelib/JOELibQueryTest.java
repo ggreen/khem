@@ -3,6 +3,13 @@ package solutions.cheminformatics.joelib;
 import java.io.IOException;
 
 import joelib2.io.BasicIOTypeHolder;
+import joelib2.molecule.Molecule;
+import joelib2.process.ProcessFactory;
+import joelib2.process.ProcessPipe;
+import joelib2.process.filter.DescriptorFilter;
+import joelib2.process.filter.FilterFactory;
+import joelib2.process.types.FeatureSelectionWriter;
+import khem.solutions.cheminformatics.joelib.JOELib;
 import khem.solutions.cheminformatics.joelib.JOELibSearch;
 import nyla.solutions.global.io.IO;
 
@@ -10,7 +17,7 @@ import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@Ignore
+//@Ignore
 public class JOELibQueryTest
 {
 
@@ -28,27 +35,22 @@ public class JOELibQueryTest
 		
 		
 		Assert.assertTrue(q.isSubSearch(query, mol));
-		
 		Assert.assertTrue(!q.isSubSearch(mol,query));
-		
 		Assert.assertTrue(!q.isSubSearch(query, cyclopentane));
+		
+		Molecule molecule = JOELib.toMolecule(mol);
+		
+		FeatureSelectionWriter featureselectionwriter = (FeatureSelectionWriter)ProcessFactory.instance().getProcess("FeatureSelectionWriter");
+		DescriptorFilter descriptorfilter = (DescriptorFilter)FilterFactory.instance().getFilter("DescriptorFilter");
+		//descriptorfilter.init(s3, false);
+		
+		ProcessPipe processPipe = (ProcessPipe)ProcessFactory.instance().getProcess("ProcessPipe");
+		processPipe.addProcess(featureselectionwriter, descriptorfilter);
+		
+		processPipe.process(molecule, null);
+		System.out.println("molecule.title:"+molecule.getTitle());
 		
 	}// --------------------------------------------------------
 	
-	@Test
-	public void test()
-	throws IOException
-	{
-		JOELibSearch q = new JOELibSearch();
-		
-		//String smart = IO.readFile("runtime/input/matchTarget.mol");
-		
-		String smart = "c1ccccc1";
-		String  molURL  = "runtime/input/data/query.mol";
-		
-		
-		Assert.assertTrue(q.test(molURL, smart, BasicIOTypeHolder.instance().filenameToType("MOL"),
-                BasicIOTypeHolder.instance().filenameToType("MOL")));
-	}
 
 }
