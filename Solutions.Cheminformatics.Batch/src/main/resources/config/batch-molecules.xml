@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- *********************** PTG JOB ************************************-->
+
+	<job id="molecules_jobs" xmlns="http://www.springframework.org/schema/batch">
+		<step id="molecules_import">
+			<tasklet>
+			<!--  processor="molecules_sdf_processor"  -->
+				<chunk reader="molecules_sdf_reader"  writer="molecules_gem_writer" 
+					commit-interval="50000"/>
+				<listeners>
+		            <!--  listener ref="CHEMISTRY_ANNOTATIONS_PTG_PREPROCESSOR"/-->
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+  <!--   *******************************************-->
+
+	
+	<bean id="molecules_sdf_reader" class="khem.solutions.cheminformatics.batch.spring.FileSdfReader">
+		<property name="filePath" value="/Projects/solutions/khem/dev/Solutions.Cheminformatics.Batch/runtime/input/example_mols.sdf"/>
+	</bean>  
+	<!--   *******************************************-->
+	<bean id="molecules_gem_writer" class="org.springframework.batch.item.adapter.ItemWriterAdapter">
+			<property name="targetObject" ref="moleculeRepository"/>
+			<property name="targetMethod" value="equals"></property>
+	</bean>	
+	<bean id="moleculeRepository"  class="java.lang.String"/>
+	
+	<bean id="molecules_sdf_processor" class="org.springframework.batch.item.adapter.ItemProcessorAdapter">
+			<property name="targetObject" ref="moleculeRepository"/>
+			<property name="targetMethod" value="equals"></property>
+	</bean>
+ 
+	
+</beans>
