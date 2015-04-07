@@ -45,6 +45,7 @@ dependencies {
 	     
     compile group: 'nyla.solutions.global', name: 'nyla.solutions.global', version: '1.0'
     compile group: 'nyla.solutions.dao', name: 'nyla.solutions.dao', version: '1.0'
+    compile group: 'nyla.solutions.office', name: 'nyla.solutions.office', version: '1.0'
     compile group: 'nyla.solutions.dao.mongoDb', name: 'nyla.solutions.dao.mongoDb', version: '1.0'
     compile group: 'joelib2', name: 'joelib2'
     compile group: 'jdrawcore', name: 'jdrawcore'

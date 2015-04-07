@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import khem.solutions.cheminformatics.data.RawMoleculeInfo;
 import nyla.solutions.global.exception.RequiredException;
 
 
@@ -18,15 +19,16 @@ import nyla.solutions.global.exception.RequiredException;
  * @author Gregory Green
  *
  */
-public class SDFEntry implements Serializable
+public class SDFEntry implements Serializable, RawMoleculeInfo
 {
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = -8410075951479523765L;
 	/**
-	 * @return the molFile
+	 * @see khem.solutions.cheminformatics.data.RawMoleculeInfo#getMolString()
 	 */
+	@Override
 	public String getMolString()
 	{
 		return molString.toString();
@@ -104,8 +106,10 @@ public class SDFEntry implements Serializable
 	 * @param name the parameter name
 	 * @return the first value of the parameter
 	 */
+	@Override
 	public String retrieveParamValue(String name)
 	{
+		
 		Collection<String> values = retrieveParamValues(name);
 		
 		if(values == null)
@@ -115,8 +119,7 @@ public class SDFEntry implements Serializable
 		
 	}// --------------------------------------------------------
 	/**
-	 * 
-	 * @return Flatten parameter value map 
+	 * @see khem.solutions.cheminformatics.data.RawMoleculeInfo#retrieveParamMapValue()
 	 */
 	public Map<String,String> retrieveParamMapValue()
 	{

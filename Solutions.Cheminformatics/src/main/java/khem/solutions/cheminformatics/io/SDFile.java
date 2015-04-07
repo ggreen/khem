@@ -5,6 +5,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import khem.solutions.cheminformatics.data.RawMoleculeInfo;
+
 /**
  * 
  * @author Gregory Green
@@ -21,7 +23,7 @@ public class SDFile implements Serializable
 	 * 
 	 * @return the added entry
 	 */
-	public SDFEntry newEntry()
+	public RawMoleculeInfo newEntry()
 	{
 		SDFEntry entry = new SDFEntry();
 		entries.add(entry);

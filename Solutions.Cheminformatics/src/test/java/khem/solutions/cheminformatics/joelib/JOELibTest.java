@@ -1,4 +1,4 @@
-package solutions.cheminformatics.joelib;
+package khem.solutions.cheminformatics.joelib;
 
 import joelib2.molecule.Molecule;
 import khem.solutions.cheminformatics.joelib.JOELib;

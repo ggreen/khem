@@ -305,6 +305,7 @@ public class CommasCompoundMgmt implements CompoundService
 	 * @param finders
 	 * @return
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Paging<Molecule> findPagedMolecules(MaterialCriteria materialCriteria,
 			PageCriteria pageCriteria, StructureFinder[] finders)
 	{

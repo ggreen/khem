@@ -1,4 +1,4 @@
-package solutions.cheminformatics.openbabel;
+package khem.solutions.cheminformatics.openbabel;
 
 import khem.solutions.cheminformatics.openbabel.OpenBabelSearch;
 

@@ -1,23 +1,14 @@
 package khem.solutions.cheminformatics.joelib;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 
-import joelib2.io.BasicIOType;
 import joelib2.io.BasicIOTypeHolder;
 import joelib2.io.BasicReader;
 import joelib2.io.IOType;
-import joelib2.io.MoleculeFileHelper;
-import joelib2.io.MoleculeFileIO;
 import joelib2.io.MoleculeIOException;
 import joelib2.molecule.BasicConformerMolecule;
 import joelib2.molecule.Molecule;
-import joelib2.process.types.DistanceCalculation;
 import joelib2.smarts.BasicSMARTSPatternMatcher;
-import joelib2.smarts.SMARTSPatternMatcher;
 import nyla.solutions.global.exception.SystemException;
-import nyla.solutions.global.io.IO;
 
 /**
  * <pre>

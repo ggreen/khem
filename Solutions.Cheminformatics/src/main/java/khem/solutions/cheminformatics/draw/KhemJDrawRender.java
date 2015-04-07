@@ -90,7 +90,8 @@ implements JDrawComponent
         super.setChimeString(s);
     }
 
-    public boolean setHydrogenDisplayMode(int i)
+    @SuppressWarnings("deprecation")
+	public boolean setHydrogenDisplayMode(int i)
     {
         return super.setHydrogenDisplayMode(i);
     }
@@ -142,7 +143,50 @@ implements JDrawComponent
         super.start();
     }
 
-    private final KhemJDrawRender self = this;
+    
+    /**
+	 * @return the jsOnMouseLeftClick
+	 */
+	public String getJsOnMouseLeftClick()
+	{
+		return jsOnMouseLeftClick;
+	}
+
+	/**
+	 * @param jsOnMouseLeftClick the jsOnMouseLeftClick to set
+	 */
+	public void setJsOnMouseLeftClick(String jsOnMouseLeftClick)
+	{
+		this.jsOnMouseLeftClick = jsOnMouseLeftClick;
+	}
+
+	/**
+	 * @return the jsOnMouseLeftDoubleClick
+	 */
+	public String getJsOnMouseLeftDoubleClick()
+	{
+		return jsOnMouseLeftDoubleClick;
+	}
+
+	/**
+	 * @param jsOnMouseLeftDoubleClick the jsOnMouseLeftDoubleClick to set
+	 */
+	public void setJsOnMouseLeftDoubleClick(String jsOnMouseLeftDoubleClick)
+	{
+		this.jsOnMouseLeftDoubleClick = jsOnMouseLeftDoubleClick;
+	}
+
+
+	/**
+	 * @return the self
+	 */
+	public KhemJDrawRender getSelf()
+	{
+		return self;
+	}
+
+
+	private final KhemJDrawRender self = this;
     private String jsOnMouseLeftClick;
     private String jsOnMouseLeftDoubleClick;
 

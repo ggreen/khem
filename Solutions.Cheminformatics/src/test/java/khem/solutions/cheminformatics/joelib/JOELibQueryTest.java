@@ -1,8 +1,6 @@
-package solutions.cheminformatics.joelib;
+package khem.solutions.cheminformatics.joelib;
 
-import java.io.IOException;
 
-import joelib2.io.BasicIOTypeHolder;
 import joelib2.molecule.Molecule;
 import joelib2.process.ProcessFactory;
 import joelib2.process.ProcessPipe;
@@ -14,7 +12,7 @@ import khem.solutions.cheminformatics.joelib.JOELibSearch;
 import nyla.solutions.global.io.IO;
 
 import org.junit.Assert;
-import org.junit.Ignore;
+//import org.junit.Ignore;
 import org.junit.Test;
 
 //@Ignore

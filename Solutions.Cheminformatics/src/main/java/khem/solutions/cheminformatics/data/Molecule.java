@@ -20,15 +20,22 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 	/**
 	 * @return the weight
 	 */
-	public String getWeight()
+	public Double getWeight()
 	{
 		return weight;
-	}
+	}// --------------------------------------------------------
 
 	/**
 	 * @param weight the weight to set
 	 */
-	public void setWeight(String weight)
+	public void setWeight(double weight)
+	{
+		this.weight = Double.valueOf(weight);
+	}
+	/**
+	 * @param weight the weight to set
+	 */
+	public void setWeight(Double weight)
 	{
 		this.weight = weight;
 	}
@@ -313,7 +320,7 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 	private static final long serialVersionUID = 5791503838849751260L;
 	private String name;
 	private String molKey;
-	private String weight;
+	private Double weight;
 	private String formula;
 	private String molString;
 	@Id

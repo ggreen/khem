@@ -3,8 +3,6 @@ package khem.solutions.cheminformatics.joelib;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-import joelib2.feature.Description;
 import joelib2.feature.types.MolecularWeight;
 import joelib2.io.BasicIOTypeHolder;
 import joelib2.io.BasicReader;

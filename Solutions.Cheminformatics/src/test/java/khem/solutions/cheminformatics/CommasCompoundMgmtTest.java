@@ -115,7 +115,7 @@ public class CommasCompoundMgmtTest
 		molecule.setFormula("H20");
 		molecule.setName("2+Benzene");
 		molecule.setSourceCode("eMolecules");
-		molecule.setWeight("18.01528 g/mol");
+		molecule.setWeight(18.01528);
 		
 		
 		MoleculeRepository moleculeRepository = ServiceFactory.getInstance().create("moleculeRepository");
@@ -184,7 +184,7 @@ public class CommasCompoundMgmtTest
 
 			molecule.setName(name);
 			molecule.setSourceCode("eMoleculeFunction");
-			molecule.setWeight(String.valueOf(JOELib.toWeight(joeMolecule)));
+			molecule.setWeight(JOELib.toWeight(joeMolecule));
 			
 			molecule.setCanonicalSMILES(JOELib.toSMILES(joeMolecule));
 			

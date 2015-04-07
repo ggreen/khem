@@ -20,6 +20,10 @@
     <context:component-scan  base-package="nyla.solutions.gedi.gemfire,khem.solutions.cheminformatics.dao.gemfire.server">
     </context:component-scan>
     <context:annotation-config/>
+    
+    <gfe:disk-store id="overflowDiskStore">
+    </gfe:disk-store>
+    
     <gfe:annotation-driven/>
     	
 		<util:properties id="gemfire-props">
@@ -54,8 +58,12 @@
 
 	 <gfe:transaction-manager id="gemfireTransactionManager" cache-ref="gemfireCache"  copy-on-read="true"/>
 	  <tx:annotation-driven/>		
-		<gfe:partitioned-region id="molecules">
+	
+	<!-- ****************** -->
+	<!-- REGION  -->
+	<gfe:partitioned-region id="molecules" shortcut="PARTITION_HEAP_LRU" disk-store-ref="overflowDiskStore">
 	</gfe:partitioned-region>
+	<!-- ****************** -->
 			
     <bean id="moleculesTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
     	<constructor-arg ref="molecules"></constructor-arg>

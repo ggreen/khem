@@ -134,6 +134,16 @@ public class StructureGemFireDAO implements StructureDAO
 
 
 
+	/**
+	 * @return the moleculeTemplate
+	 */
+	public GemfireTemplate getMoleculeTemplate()
+	{
+		return moleculeTemplate;
+	}
+
+
+
 	private GemfireTemplate moleculeTemplate;
 
 	@Autowired
