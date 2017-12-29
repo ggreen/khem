@@ -18,13 +18,18 @@
 		http://www.springframework.org/schema/data/gemfire
         http://www.springframework.org/schema/data/gemfire/spring-data-gemfire.xsd
 	   ">
-
+   <context:component-scan  base-package="nyla.solutions.gedi.gemfire,khem.solutions.cheminformatics.dao.gemfire">
+    </context:component-scan>
+    <context:annotation-config/>
+    <gfe:annotation-driven/>
+    
 	<util:properties id="gemfire-props">
-		<prop key="log-level">config</prop>
+		<prop key="log-level">fine</prop>
         <prop key="mcast-port">0</prop>
 	</util:properties>
 	
 	<gfe-data:repositories base-package="khem.solutions.cheminformatics.dao.gemfire"/>
+	<gfe-data:function-executions base-package="khem.solutions.cheminformatics.dao.gemfire"/>
 
 	<!-- GemFire client cache config -->
 	<gfe:client-cache	
@@ -48,6 +53,8 @@
 	<bean id="eMolecules" class="khem.solutions.cheminformatics.dao.StructureFinderByMol" >
 		<property name="structureDAO" ref="eMoleculesDAO"></property>
 	</bean>
+	<bean id="eMoleculeFunction" class="khem.solutions.cheminformatics.dao.gemfire.MoleculeFinderByFunction" >
+	</bean>
 	
 	<bean id="pdxSerializer" class="com.gemstone.gemfire.pdx.ReflectionBasedAutoSerializer">
 			<property name="serializableClasses">
@@ -60,6 +67,4 @@
 	<bean id="moleculesTemplate" class="org.springframework.data.gemfire.GemfireTemplate">
 		<property name="region" ref="molecules"></property>
 	</bean>
-	
-	
 </beans>

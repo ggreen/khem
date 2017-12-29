@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- ================================ -->
+<!-- DRAWING -->
+<bean id="com.merck.mrl.chem.ui.MoleculeArtist" class="com.merck.mrl.chem.ui.JDRAW"/>
+
+<!-- =============================== -->
+<!-- DAO -->
+<bean id="com.merck.mrl.asap.integration.services.dao.ChemistryDAO" class="com.merck.mrl.asap.integration.services.dao.ChemicalJDBCDAO" scope="prototype">
+	<constructor-arg ref="dataSource"/>
+</bean>
+<bean id="com.merck.mrl.asap.integration.services.dao.InventoryDAO" class="com.merck.mrl.asap.integration.services.dao.ASAPInventoryJDBCDAO" scope="prototype">
+	<constructor-arg ref="dataSource"/>
+</bean>
+
+
+ <bean id="mcidbServiceDataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${mcidb.jdbc.driver}" />
+		<property name="url" value="${mcidb.jdbc.connection.url}" />
+		<property name="username" value="${mcidb.jdbc.user}" />
+		<property name="password" value="${mcidb.jdbc.password}" />
+	</bean>	
+    <bean id="gcimServiceDataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${gcim.jdbc.driver}" />
+		<property name="url" value="${gcim.jdbc.connection.url}" />
+		<property name="username" value="${gcim.jdbc.user}" />
+		<property name="password" value="${gcim.jdbc.password}" />
+	</bean>	
+    <bean id="cosmicServiceDataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${cosmic.jdbc.driver}" />
+		<property name="url" value="${cosmic.jdbc.connection.url}" />
+		<property name="username" value="${cosmic.jdbc.user}" />
+		<property name="password" value="${cosmic.jdbc.password}" />
+	</bean>
+    <bean id="acdServiceDataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${acd.jdbc.driver}" />
+		<property name="url" value="${acd.jdbc.connection.url}" />
+		<property name="username" value="${acd.jdbc.user}" />
+		<property name="password" value="${acd.jdbc.password}" />
+	</bean>	
+  <bean id="merckAcdServiceDataSource" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${merckACD.jdbc.driver}" />
+		<property name="url" value="${merckACD.jdbc.connection.url}" />
+		<property name="username" value="${merckACD.jdbc.user}" />
+		<property name="password" value="${merckACD.jdbc.password}" />
+	</bean>
+	
+	  <bean id="acdNonCoLocatedDS" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${acdNonCoLocated.jdbc.driver}" />
+		<property name="url" value="${acdNonCoLocated.jdbc.connection.url}" />
+		<property name="username" value="${acdNonCoLocated.jdbc.user}" />
+		<property name="password" value="${acdNonCoLocated.jdbc.password}"/>
+	</bean>
+    <bean id="cosmicDS" class="solutions.dao.spring.batch.ConfigDriverMgrDataSource">
+		<property name="driverClassName" value="${cosmic.jdbc.driver}" />
+		<property name="url" value="${cosmic.jdbc.connection.url}" />
+		<property name="username" value="${cosmic.jdbc.user}" />
+		<property name="password" value="${cosmic.jdbc.password}" />
+	</bean>	
+	<!-- bean id="com.merck.mrl.asap.integration.services.ASAPFactory" class="com.merck.mrl.asap.integration.services.ASAPFactoryBasic"-->
+
+	<bean id="com.merck.mrl.asap.integration.services.ASAPFactory" class="com.merck.mrl.asap.integration.services.ASAPFactoryService"/>
+	<bean id="MCIDBDAO" class="com.merck.mrl.asap.integration.services.dao.MCIDBJDBCDAO" scope="prototype">
+		<constructor-arg ref="mcidbServiceDataSource"/>
+	</bean>
+	<bean id="MERCKACDDAO" class="com.merck.mrl.asap.integration.services.dao.MerckACDJDBCDAO" scope="prototype">
+		<constructor-arg ref="merckAcdServiceDataSource"/>
+	</bean>
+	<bean id="ACDDAO" class="com.merck.mrl.asap.integration.services.dao.ACDJDBCDAO" scope="prototype">
+		<constructor-arg ref="acdServiceDataSource"/>
+	</bean>
+</beans>

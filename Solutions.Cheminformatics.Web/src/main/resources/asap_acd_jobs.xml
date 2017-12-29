@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<job id="acd" xmlns="http://www.springframework.org/schema/batch">
+		<step id="stepACD">
+			<tasklet>
+				<chunk reader="acdItemReader" writer="asapStructureItemWriter"
+					commit-interval="2" />
+			</tasklet>
+		</step>
+	</job>
+	<bean id="acdItemReader" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select 
+				            /*+ FIRST_ROWS */
+				            
+				            MDLNUMBER||TO_CHAR(cdregno),
+				            'ACD',
+							cdregno, 
+							MDLNUMBER,
+							NULL,
+							MOLWEIGHT_FRAG,
+							MOLNAME,
+							MOLECULAR_FORMULA
+						from ACD_MOLTABLE
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	
+	
+   <bean id="asapStructureItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into ASAP_STRUCTURES (STRUCTKEY,
+							STRUCTURE_TYPE,
+							CDREGNO,
+							MDLNUMBER,
+							COMPOUNDID,
+							WEIGHT,
+							NAME,
+							FORMULA)
+						values (?,?,?,?,?,?,?,?)
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+
+</beans>

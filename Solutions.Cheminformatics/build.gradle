@@ -14,9 +14,6 @@ repositories {
     mavenCentral()
 
     flatDir {
-        dirs '/devtools/repositories/grid/Pivotal_GemFire_810_b50625_Linux/lib'   
-    	}
-    flatDir {
         dirs '/devtools/chemistry/JOELib2-alpha-20090613/lib'   
     	}
     
@@ -43,7 +40,7 @@ dependencies {
     compile 'log4j:log4j:1.2.17'
 	compile 'org.mongodb:mongo-java-driver:2.10.1'
 	     
-    compile group: 'nyla.solutions.global', name: 'nyla.solutions.global', version: '1.0'
+	compile 'com.github.ggreen:nyla.solutions.global:0.0.2'
     compile group: 'nyla.solutions.dao', name: 'nyla.solutions.dao', version: '1.0'
     compile group: 'nyla.solutions.office', name: 'nyla.solutions.office', version: '1.0'
     compile group: 'nyla.solutions.dao.mongoDb', name: 'nyla.solutions.dao.mongoDb', version: '1.0'

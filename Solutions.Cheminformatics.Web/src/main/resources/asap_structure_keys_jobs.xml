@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<job id="ACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="ACD_IMPORT">
+			<tasklet>
+				<chunk reader="ACD_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="ACD_PREPROCESSOR"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	<job id="MCIDB" xmlns="http://www.springframework.org/schema/batch">
+		<step id="MCIDB_IMPORT">
+			<tasklet>
+				<chunk reader="MCIDB_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" processor="MCIDB_Processor"/>
+			</tasklet>
+		</step>
+	</job>
+	
+	<job id="MERCKACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="MERCKACD_IMPORT">
+			<tasklet>
+				<chunk reader="MERCKACD_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="MERCKACD_PREPROCESSOR"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	
+	<bean id="ACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select molnemakey(CTAB), MDLNUMBER,'ACD' STRUCT_SOURCE_CD, NVL(DATESTAMP,SYSDATE), 'Y' IS_ACTIVE
+from molacd.ACD2D_MOLTABLE
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="MCIDB_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select distinct molnemakey(CTAB), COMPOUND_ID,'MCIDB' STRUCT_SOURCE_CD, nvl(DATESTAMP, sysdate), 'Y' IS_ACTIVE
+						from ecdspic60.RCG_STUFF_MOLTABLE
+						where COMPOUND_ID is not null
+
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="mcidbDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>	
+	
+	<bean id="MCIDB_Processor" class="solutions.dao.spring.batch.DAOCommandProcessor">
+		<property name="skipCommand">
+			<bean class="solutions.dao.patterns.command.HasResultsArrayableCommand">
+				<property name="dataSource" ref="dataSource" />
+				<property name="hasResultThanTrue" value="true"/>
+				<property name="sql"><value>select 'Y' from STRUCTURE_KEYS where MOLKEY = ? and STRUCTUREKEY = ? </value></property>
+				<property name="inputsPositions">
+					<list>
+					    <value>0</value>
+						<value>1</value>
+						</list>
+				</property>
+			</bean>
+		</property>
+		<property name="beforeCommand">
+			<bean class="solutions.dao.patterns.command.ExecuteUpdateArrayableCommand">
+				<property name="sql">
+					<value>
+						delete from STRUCTURE_KEYS where STRUCTUREKEY = ?
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+				<property name="inputsPositions">
+					<list>
+						<value>1</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<!-- ================================ -->
+		
+	<bean id="MERCKACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select molnemakey(CTAB), MDLNUMBER,'MERCKACD' STRUCT_SOURCE_CD, nvl(DATESTAMP, sysdate), 'Y' IS_ACTIVE
+from ecdsermstruct60.MRK_acd2d_mol
+
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="merckAcdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	
+   <bean id="STRUCTURE_KEYS_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				INSERT into STRUCTURE_KEYS  (MOLKEY, STRUCTUREKEY,STRUCT_SOURCE_CD, LAST_MOD_DT, IS_ACTIVE)
+				 values(?,?,?,?,?)
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+
+	<bean id="ACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="ACD_DELETE_PREVIOUS_COMMAND"/>
+	</bean>
+	<bean id="ACD_DELETE_PREVIOUS_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from STRUCTURE_KEYS where STRUCT_SOURCE_CD = 'ACD'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
+	<!-- ====================== -->
+	
+	<bean id="MERCKACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="MERCKACD_DELETE_PREVIOUS_COMMAND"/>
+	</bean>
+	<bean id="MERCKACD_DELETE_PREVIOUS_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from STRUCTURE_KEYS where STRUCT_SOURCE_CD = 'MERCKACD'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+</beans>

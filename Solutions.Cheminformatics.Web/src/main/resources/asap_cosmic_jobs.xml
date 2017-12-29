@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<job id="COSMIC_RYN_800" xmlns="http://www.springframework.org/schema/batch">
+		<!-- step id="COSMIC_RY_800_SETUP" next="COSMIC_RYN_800_IMPORT">
+					<tasklet ref="emptyReportsDirectoryTasklet"/>
+		</step-->
+		<step id="COSMIC_RYN_800_IMPORT">
+		            <!--  task-executor="taskExecutor" throttle-limit="20" -->
+					<tasklet>
+						<chunk reader="CMM_INV_CONTAINER_ReaderRY_800" writer="CMM_INV_CONTAINER_Writer" processor="CMM_INV_CONTAINER_Processor"
+							commit-interval="20000" />
+					</tasklet>
+					 <listeners>
+				        <listener ref="cosmicContainerSkipListener"/>
+				        <listener ref="COSMIC_RYN_800_IMPORT_PRE_CLEANUP"/>
+					    <listener ref="BATCH_ERROR_LISTENER"/>
+				        
+				    </listeners>
+				</step>
+	</job>
+   <job id="COSMIC_RYN_50G" xmlns="http://www.springframework.org/schema/batch">
+		<step id="COSMIC_RYN_50G_IMPORT">
+		            <!--  task-executor="taskExecutor" throttle-limit="20" -->
+					<tasklet>
+						<chunk reader="CMM_INV_CONTAINER_ReaderRY_50G" writer="CMM_INV_CONTAINER_Writer" processor="CMM_INV_CONTAINER_Processor"
+							commit-interval="20000" />
+					</tasklet>
+					 <listeners>
+				        <listener ref="cosmicContainerSkipListener"/>
+				         <listener ref="COSMIC_RYN_50G_PRE_CLEANUP"/>
+						<listener ref="BATCH_ERROR_LISTENER"/>
+				    </listeners>
+				</step>
+	</job>
+   <job id="COSMIC_BMB" xmlns="http://www.springframework.org/schema/batch">
+		<step id="COSMIC_BMB_IMPORT">
+		            <!--  task-executor="taskExecutor" throttle-limit="20" -->
+					<tasklet>
+						<chunk reader="CMM_INV_CONTAINER_Reader_BMB" writer="CMM_INV_CONTAINER_Writer" processor="CMM_INV_CONTAINER_Processor"
+							commit-interval="20000" />
+					</tasklet>
+					 <listeners>
+				        <listener ref="cosmicContainerSkipListener"/>
+				        <listener ref="COSMIC_BMB_PRE_CLEANUP"/>
+						<listener ref="BATCH_ERROR_LISTENER"/>
+				    </listeners>
+				</step>
+	</job>	
+   <job id="COSMIC_KENILWORTH" xmlns="http://www.springframework.org/schema/batch">
+		<step id="COSMIC_KENILWORTH_IMPORT">
+		            <!--  task-executor="taskExecutor" throttle-limit="20" -->
+					<tasklet>
+						<chunk reader="CMM_INV_CONTAINER_Reader_KENILWORTH_K15" writer="CMM_INV_CONTAINER_Writer" processor="CMM_INV_CONTAINER_Processor"
+							commit-interval="20000" />
+					</tasklet>
+					 <listeners>
+				        <listener ref="cosmicContainerSkipListener"/>
+				        <listener ref="COSMIC_KENILWORTH_PRE_CLEANUP"/>
+						<listener ref="BATCH_ERROR_LISTENER"/>
+				    </listeners>
+				</step>
+	</job>	
+   <job id="COSMIC_WPP" xmlns="http://www.springframework.org/schema/batch">
+		<step id="COSMIC_WPP_14_IMPORT">
+		            <!--  task-executor="taskExecutor" throttle-limit="20" -->
+					<tasklet>
+						<chunk reader="CMM_INV_CONTAINER_Reader_WPP_14" writer="CMM_INV_CONTAINER_Writer" processor="CMM_INV_CONTAINER_Processor"
+							commit-interval="20000" />
+					</tasklet>
+					 <listeners>
+				        <listener ref="cosmicContainerSkipListener"/>
+				        <listener ref="COSMIC_WPP_PRE_CLEANUP"/>
+						<listener ref="BATCH_ERROR_LISTENER"/>
+				    </listeners>
+				</step>
+	</job>		
+
+	
+	<bean id="CMM_INV_CONTAINER_Reader_KENILWORTH_K15" class="solutions.dao.spring.batch.JdbcCursorItemTextableReader">
+        <property name="textable" ref="CMM_INV_CONTAINER_Reader_Textable_SQL_KENILWORTH_K15"/>
+       
+		<property name="dataSource">
+			<ref bean="cosmicDataSource"/>
+		</property>
+		
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+    <bean id="CMM_INV_CONTAINER_Reader_BMB" class="solutions.dao.spring.batch.JdbcCursorItemTextableReader">
+        <property name="textable" ref="CMM_INV_CONTAINER_Reader_Textable_SQL_BMB"/>
+		<property name="dataSource">
+			<ref bean="cosmicDataSource"/>
+		</property>
+		
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>	
+	<bean id="CMM_INV_CONTAINER_Reader_WPP_14" class="solutions.dao.spring.batch.JdbcCursorItemTextableReader">
+        <property name="textable" ref="CMM_INV_CONTAINER_Reader_Textable_SQL_WPP_14"/>
+		<property name="dataSource">
+			<ref bean="cosmicDataSource"/>
+		</property>
+		
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>	
+	<!-- *************************************** -->
+	<bean id="CMM_INV_CONTAINER_ReaderRY_800" class="solutions.dao.spring.batch.JdbcCursorItemTextableReader">
+        <property name="textable" ref="CMM_INV_CONTAINER_Reader_Textable_SQL_RYN_800"/>
+        <property name="dataSource">
+			<ref bean="cosmicDataSource"/>
+		</property>
+		
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="CMM_INV_CONTAINER_ReaderRY_50G" class="solutions.dao.spring.batch.JdbcCursorItemTextableReader">
+        <property name="textable" ref="CMM_INV_CONTAINER_Reader_Textable_SQL_RYN_50G"/>
+     		<property name="dataSource">
+			<ref bean="cosmicDataSource"/>
+		</property>
+		
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<!-- CMM_INV_CONTAINER_Writer -->
+	<bean id="CMM_INV_CONTAINER_Writer" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+			INSERT
+			  INTO INVENTORY
+			    (
+			      INVENTORY_ID,
+			      INV_SOURCE_CD ,
+			      STRUCTUREKEY ,
+                  CONTAINERLABEL ,
+	              BARCODE , -- 5
+                  SITE ,
+			      BUILDING ,
+		          BATCHNUMBER,
+                  FLOOR ,
+		          ROOM ,  -- 10
+                  SUBLOCATION,
+                  VENDORNAME ,
+			      ORIGINALAMOUNT ,
+			      ORIGINALAMOUNTUNITS ,
+			      CASNUMBER , -- 15
+			      LOC_TYPE_CD,
+			      LAST_MOD_DT,
+			      MOLKEY,
+			      STRUCT_SOURCE_CD --19
+			      
+			    )
+			    VALUES
+			    (
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ? ,
+			      ?,
+			      ?,
+			      ? -- 19
+			    )
+      </value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="CMM_INV_CONTAINER_Writer_itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	
+    <bean id="CMM_INV_CONTAINER_Writer_itemPreparedStatementSetter" class="solutions.dao.spring.batch.DataRowMapperSetter" scope="prototype">
+		<property name="maxParameters" value="19"/>	
+	</bean>
+	<!--  CMM_INV_CONTAINER_Processor -->
+	<!-- ******************************************************** -->
+	<bean id="CMM_INV_CONTAINER_Processor" class="com.merck.mrl.asap.integration.batch.CosmicAssociateStructureBySubstanceIdDeletePreviousProcessor" scope="prototype">
+		<property name="acdDataSource"><ref bean="acdDataSource"/></property>
+		<property name="cosmicDataSource"><ref bean="cosmicDataSource"/></property>
+		<property name="asapDataSource"><ref bean="dataSource"/></property>
+		 <property name="lNumberSqlPrefix">
+	    	<value>
+	    	  select ss.SUBSTANCENAME
+			from cosmicerm.SYNONYMTYPECODES stc, cosmicerm.SUBSTANCESYNONYM ss
+			where stc.SYNONYMTYPENAME = 'Customer Compound ID'
+			    and stc.SYNONYMTYPEID = ss.SYNONYMTYPEID
+			    and ss.SUBSTANCENAME like 'L-%'
+			    and ss.substanceid = 
+	    	</value>
+	    </property>
+	    <property name="mdlSqlPrefix">
+	    	<value>
+	    	 select ss.SUBSTANCENAME
+			from cosmicerm.SYNONYMTYPECODES stc, cosmicerm.SUBSTANCESYNONYM ss
+			where stc.SYNONYMTYPENAME = 'MDL#'
+			   and ss.SYNONYMTYPEID = stc.SYNONYMTYPEID
+			   and ss.SUBSTANCENAME like 'MFCD%'
+			    and ss.substanceid = 
+	    	</value>
+	    </property>
+	    <property name="merckAcdMdlSqlPrefix">
+	    	<value>
+	    	 select ss.SUBSTANCENAME
+			from cosmicerm.SYNONYMTYPECODES stc, cosmicerm.SUBSTANCESYNONYM ss
+			where stc.SYNONYMTYPENAME = 'Customer Compound ID'
+			   and ss.SYNONYMTYPEID = stc.SYNONYMTYPEID
+			   and ss.SUBSTANCENAME like 'MERK%'
+			    and ss.substanceid = 
+	    	</value>
+	    </property>
+	    <property name="commonNameSqlPrefix">
+	    	<value>
+	    	 select ss.SUBSTANCENAME
+			from cosmicerm.SYNONYMTYPECODES stc, cosmicerm.SUBSTANCESYNONYM ss
+			where stc.SYNONYMTYPENAME = 'Common Name'
+			  and stc.SYNONYMTYPEID = ss.SYNONYMTYPEID
+			    and ss.substanceid = 
+	    	</value>
+	    </property>
+	        <property name="casNumSqlPrefix">
+	    	<value>
+	    	 select ss.SUBSTANCENAME
+			from cosmicerm.SYNONYMTYPECODES stc, cosmicerm.SUBSTANCESYNONYM ss
+			where stc.SYNONYMTYPENAME = 'CAS'
+			    and stc.SYNONYMTYPEID = ss.SYNONYMTYPEID
+			    and ss.substanceid = 
+	    	</value>
+	    </property>
+	    <property name="primaryKeyPos" value="1"/>
+	    <property name="substanceIdPos" value="20"/>
+	    <property name="molKeyPos" value="18"/>
+	    <property name="structSourceCodePos" value="19"/>
+	    <property name="structKeyPos" value="3"/>
+	    <property name="casNumPos" value="15"/>
+	    <property name="lastModDatePos" value="17"/>
+	    <property name="acdSourceCode" value="ACD"/>
+	    <property name="mcidbSourceCode" value="MCIDB"/>
+		<property name="merckAcdSourceCode" value="MERCKACD"/>
+		<property name="barCodePos" value="5"/>
+		
+		
+	    <!--  property name="molKeyPos" value="16"/-->
+	   
+		<property name="skipFileHeader">
+		 <value>containerid, inv_source_code,structurekey,labelname,barcode,sitename,building,batchnumber,floorname,room, subloc, vendor,originalamount,originalamountunits, CASNUM,ROOMTYPENAME,lastmodt,molkey,structureSource,substanceid</value>
+		</property>
+	</bean>
+	<!-- *************************************************************** -->
+	
+	<bean id="cosmicContainerSkipListener" class="solutions.dao.spring.batch.CsvArrayableSkipListener">
+	   <property name="skipInWriteFilePath" value="${report.dir}/COSMIC_WRITE_SKIPS.csv"/>
+	   <property name="skipInReadFilePath" value="r${report.dir}/reports/COSMIC_READ_SKIPS.csv"/>
+	   <property name="skipInProcessFilePath" value="${report.dir}/reports/COSMIC_INPROGRESS_SKIPS.csv"/>
+	</bean>
+	
+    <bean id="cosmicCommandStepExecutionListener" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+	   <property name="beforeCommand" ref="emptyReportsDirectoryCommand"/>
+	</bean>
+
+    <bean id="CMM_INV_CONTAINER_Reader_Textable_SQL_RYN_800" class="solutions.global.patterns.decorator.TextFormatDecorator">
+        <property name="target" ref="CMM_INV_CONTAINER_Textable_Template"/>
+        <property name="map">
+        	<map>
+	        	<entry>
+	        		<key><value>SITE_FILTER</value></key>
+	        		<value>(s.name = 'RYN' AND b.name = '800')</value>
+	        	</entry>
+	        	</map>
+        </property>
+	</bean>
+
+   <bean id="CMM_INV_CONTAINER_Reader_Textable_SQL_KENILWORTH_K15" class="solutions.global.patterns.decorator.TextFormatDecorator">
+        <property name="target" ref="CMM_INV_CONTAINER_Textable_Template"/>
+        <property name="map">
+        	<map>
+	        	<entry>
+	        		<key><value>SITE_FILTER</value></key>
+	        		<value>(s.name = 'KENILWORTH' and b.name = 'K15')</value>
+	        	</entry>
+	        	</map>
+        </property>
+	</bean>
+   <bean id="CMM_INV_CONTAINER_Reader_Textable_SQL_BMB" class="solutions.global.patterns.decorator.TextFormatDecorator">
+        <property name="target" ref="CMM_INV_CONTAINER_Textable_Template"/>
+        <property name="map">
+        	<map>
+	        	<entry>
+	        		<key><value>SITE_FILTER</value></key>
+	        		<value>(s.name = 'BMB')</value>
+	        	</entry>
+	        	</map>
+        </property>
+	</bean>	
+	
+   <bean id="CMM_INV_CONTAINER_Reader_Textable_SQL_RYN_50G" class="solutions.global.patterns.decorator.TextFormatDecorator">
+        <property name="target" ref="CMM_INV_CONTAINER_Textable_Template"/>
+        <property name="map">
+        	<map>
+	        	<entry>
+	        		<key><value>SITE_FILTER</value></key>
+	        		<value>(s.name = 'RYN' AND b.name = '50G')</value>
+	        	</entry>
+	        	</map>
+        </property>
+	</bean>
+	   <bean id="CMM_INV_CONTAINER_Reader_Textable_SQL_WPP_14" class="solutions.global.patterns.decorator.TextFormatDecorator">
+        <property name="target" ref="CMM_INV_CONTAINER_Textable_Template"/>
+        <property name="map">
+        	<map>
+	        	<entry>
+	        		<key><value>SITE_FILTER</value></key>
+	        		<value>(s.name = 'WPP' and b.name  = '14') </value>
+	        	</entry>
+	        	</map>
+        </property>
+	</bean>
+	
+<!-- Previous version 
+
+			SELECT c.containerid containerid, 
+			   'COSMIC',
+			   null structurekey, 
+			   c.labelname, 
+			   c.barcode,
+			   s.name sitename,
+			   b.name building,
+			   sl.batchnumber,
+			   f.name floorname, 
+			   r.name room, 
+			   COSMICERM.F_GETSUPLOCNAMEFULL(suploc.supplementallocid, 1) subloc1,
+			   vendor.name, 
+			   nvl(cosl.originalamount,0), 
+			   cosl.originalamountunits,
+			   null CASNUM, 
+			   rtc.ROOMTYPENAME,
+			   c.lastmoddt,
+               'TODO' molkey,
+               null struct_source_cd,
+               sl.substanceid
+			  FROM cosmicerm.container c,cosmicerm.rooms r, cosmicerm.buildings b, cosmicerm.sites s, cosmicerm.floors f, cosmicerm.roomtypecodes rtc, 
+			    cosmicerm.containerofsubstancelot cosl,
+			     cosmicerm.substancelot sl,
+			     cosmicerm.supplementalloc suploc,
+			     cosmicerm.vendor
+			WHERE 
+			 c.containerid = cosl.containerid
+			 and cosl.substancelotid = sl.substancelotid
+			 and c.useroomid = r.roomid
+			 and r.roomtypeid =  rtc.ROOMTYPEID
+			 and r.floorid = f.floorid 
+			 and r.buildingid = b.buildingid
+			 and b.siteid = s.siteid
+			 and (${SITE_FILTER}
+			      )
+			  and c.containerstatusid in (
+                                             select containerstatusid
+                                                        from cosmicerm.CONTAINERSTATUSCODES csc
+                                                        where CONTAINERSTATUSNAME = 'IN USE')
+                                  and c.usesuplocid = suploc.supplementallocid (+)
+                                  and (suploc.roomid  is null or r.roomid = suploc.roomid)
+                                  and sl.supplierid = vendor.vendorid (+)
+
+
+-->							  
+	<bean id="CMM_INV_CONTAINER_Textable_Template" class="solutions.global.patterns.decorator.StringText">
+        <property name="text">
+        	<value>
+			SELECT c.containerid containerid, 
+			   'COSMIC',
+			   null structurekey, 
+			   c.labelname, 
+			   c.barcode, --5
+			   s.name sitename,
+			   b.name building,
+			   null batchnumber, -- sl.batchnumber,
+			   f.name floorname, 
+			   r.name room, 
+			   COSMICERM.F_GETSUPLOCNAMEFULL(suploc.supplementallocid, 1) subloc1,
+			   vendor.name, 
+			   nvl(c.ORIGINALAMOUNT,0), 
+			   c.ORIGINALAMOUNTUNITS,
+			   null CASNUM, 
+			   rtc.ROOMTYPENAME,
+			   c.lastmoddt,
+               'TODO' molkey,
+               null struct_source_cd,
+               sl.substanceid
+			  FROM cosmicerm.container c,cosmicerm.rooms r, cosmicerm.buildings b, cosmicerm.sites s, cosmicerm.floors f, cosmicerm.roomtypecodes rtc, 
+			   -- cosmicerm.containerofsubstancelot cosl,
+			     cosmicerm.substancelot sl,
+			     cosmicerm.supplementalloc suploc,
+			     cosmicerm.vendor
+			WHERE 
+			-- c.containerid = cosl.containerid and 
+        c.substancelotid = sl.substancelotid
+			 and c.useroomid = r.roomid
+			 and r.roomtypeid =  rtc.ROOMTYPEID
+			 and r.floorid = f.floorid 
+			 and r.buildingid = b.buildingid
+			 and b.siteid = s.siteid
+			 and (${SITE_FILTER}
+			      )
+			  and c.containerstatusid in ( select containerstatusid
+                                                        from cosmicerm.CONTAINERSTATUSCODES csc
+                                                        where CONTAINERSTATUSNAME = 'IN USE')
+                                  and c.usesuplocid = suploc.supplementallocid (+)
+                                  and (suploc.roomid  is null or r.roomid = suploc.roomid)
+                                  and sl.supplierid = vendor.vendorid (+)			
+           	</value>
+        </property>
+      
+	</bean>
+		<bean id="COSMIC_RYN_50G_PRE_CLEANUP" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="COSMIC_RYN_50G_PRE_CLEANUP_COMMAND"/>
+	</bean>
+	  <bean id="COSMIC_RYN_50G_PRE_CLEANUP_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from INVENTORY where INV_SOURCE_CD = 'COSMIC' and SITE = 'RYN' and BUILDING = '50G' 
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="COSMIC_RYN_800_IMPORT_PRE_CLEANUP" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="COSMIC_RYN_800_IMPORT_PRE_CLEANUP_COMMAND"/>
+	</bean>
+	<bean id="COSMIC_RYN_800_IMPORT_PRE_CLEANUP_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from INVENTORY where INV_SOURCE_CD = 'COSMIC' and SITE = 'RYN' and BUILDING = '800' 
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="COSMIC_BMB_PRE_CLEANUP" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="COSMIC_BMB_PRE_CLEANUP_COMMAND"/>
+	</bean>	
+	  <bean id="COSMIC_BMB_PRE_CLEANUP_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from INVENTORY where INV_SOURCE_CD = 'COSMIC' and SITE = 'BMB'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="COSMIC_KENILWORTH_PRE_CLEANUP" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="COSMIC_KENILWORTH_PRE_CLEANUP_COMMAND"/>
+	</bean>	
+	  <bean id="COSMIC_KENILWORTH_PRE_CLEANUP_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from INVENTORY where INV_SOURCE_CD = 'COSMIC' and SITE = 'KENILWORTH'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="COSMIC_WPP_PRE_CLEANUP" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="COSMIC_WPP_PRE_CLEANUP_COMMAND"/>
+	</bean>		
+	  <bean id="COSMIC_WPP_PRE_CLEANUP_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from INVENTORY where INV_SOURCE_CD = 'COSMIC' and SITE = 'WPP'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+</beans>

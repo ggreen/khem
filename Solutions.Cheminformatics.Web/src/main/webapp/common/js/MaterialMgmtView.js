@@ -60,12 +60,12 @@ function MaterialMgmtView(contextRoot,sessionID,mmAJAX,web,menuBuilderFunction)
         	    var operationValue = document.mmForm.searchOperation.options[document.mmForm.searchOperation.selectedIndex].value;
         	  
         	    mmRender.materialCriteria = {"locations":[{"site":"","building":"","floor":"","room":"","subLocation":"","name":""}],
-        	    		                "pageCriteria":{"id":sessionID,"beginIndex":"1","size":"300","savePagination":"true"},
-        	    		                "structureCriteria":{"pageCriteria":{"id":sessionID,"beginIndex":"1","size":"300","savePagination":"true",
+        	    		                "pageCriteria":{"id":sessionID,"beginIndex":"1","size":"20","savePagination":"true"},
+        	    		                "structureCriteria":{"pageCriteria":{"id":sessionID,"beginIndex":"1","size":"20","savePagination":"true",
         	    		                "className":" khem.solutions.cheminformatics.data.Molecule"},
         	    	 "molString": this.getMolString()
 
-        	    		 ,"sources":["eMolecules"],"structureKeys":[{"id":"","molKey":"","sourceCode":"","isActive":""}],"casNum":"","name":"",
+        	    		 ,"sources":["eMoleculeFunction"],"structureKeys":[{"id":"","molKey":"","sourceCode":"","isActive":""}],"casNum":"","name":"",
         	    		 "operation": operationValue}};
                  //Get form
                  var renderResultsData = web.toJson(mmRender.materialCriteria);

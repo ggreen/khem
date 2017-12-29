@@ -1,0 +1,998 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch-2.1.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+	<job id="ACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="ACD_IMPORT">
+			<tasklet>
+				<chunk reader="ACD_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="ACD_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>	
+	<job id="MERCKACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="MERCKACD_IMPORT">
+			<tasklet>
+				<chunk reader="MERCKACD_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="MERCKACD_PREPROCESSOR"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	<job id="STRUCTURES_EMOLECULES" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_EMOLECULES_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_EMOLECULES_READER" writer="STRUCTURES_EMOLECULES_WRITER"
+					commit-interval="10000" skip-limit="5000000">
+					<skippable-exception-classes>
+	                	<include class="java.lang.Exception"/>
+	                	<!--  exclude class="java.io.FileNotFoundException"/-->
+	            	</skippable-exception-classes>
+				</chunk>
+				<listeners>
+		            <listener ref="STRUCTURES_EMOLECULES_PREPROCESSOR"/>
+		            <listener ref="STRUCTURES_EMOLECULES_xmlSkipListener"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>					
+		        </listeners>
+		        
+			</tasklet>
+		</step>
+	</job>
+	<job id="STRUCTURES_ACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_ACD_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_ACD_READER" writer="STRUCTURES_ACD_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="STRUCTURES_ACD_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	<job id="STRUCTURES_MERCKACD" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_MERCKACD_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_MERCKACD_READER" writer="STRUCTURES_MERCKACD_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="STRUCTURES_MERCKACD_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>	
+	<job id="STRUCTURES_ACD_CAS" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_ACD_CAS_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_ACD_CAS_READER" writer="STRUCTURES_ACD_CAS_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="STRUCTURES_ACD_CAS_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	
+	<job id="STRUCTURES_ACD_CATALOG" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_ACD_CATALOG_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_ACD_CATALOG_READER" writer="STRUCTURES_ACD_CATALOG_WRITER"
+					commit-interval="50000" />
+				<listeners>
+		            <listener ref="STRUCTURES_ACD_CATALOG_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	<job id="STRUCTURES_ACD_PACKAGE" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_ACD_PACKAGE_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_ACD_PACKAGE_READER" writer="STRUCTURES_ACD_PACKAGE_WRITER"
+					commit-interval="5000" />
+				<listeners>
+		            <listener ref="STRUCTURES_ACD_PACKAGE_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>		
+	<job id="MCIDB" xmlns="http://www.springframework.org/schema/batch">
+		<step id="STRUCTURES_MCIDB_IMPORT" next="STRUCTURES_KEY_MCIDB_IMPORT">
+			<tasklet>
+				<chunk reader="STRUCTURES_MCIDB_READER" writer="STRUCTURES_MCIDB_WRITER"
+					commit-interval="50000" processor="STRUCTURES_MCIDB_Processor"/>
+				<listeners>
+					 <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+			</tasklet>
+		</step>
+		<step id="STRUCTURES_KEY_MCIDB_IMPORT" next="GCIM_MCIDB_RESTRICTIONS_IMPORT">
+			<tasklet>
+				<chunk reader="MCIDB_READER" writer="STRUCTURE_KEYS_WRITER"
+					commit-interval="50000" processor="MCIDB_Processor"/>
+			</tasklet>
+			<listeners>
+		            <listener ref="BATCH_ERROR_LISTENER"/>
+		        </listeners>
+	
+		</step>	
+		<step id="GCIM_MCIDB_RESTRICTIONS_IMPORT" next="GCIM_MCIDB_ADMINS_IMPORT">
+			<tasklet>
+				<chunk reader="GCIM_MCIDB_RESTRICTIONS_READER" writer="GCIM_MCIDB_RESTRICTIONS_WRITER"
+					commit-interval="5000">
+				</chunk>
+				<listeners>
+		            <listener ref="STRUCTURES_MCIDB_SECURITY_PREPROCESSOR"/>
+					 <listener ref="BATCH_ERROR_LISTENER"/>					
+		        </listeners>
+		        
+			</tasklet>
+		</step>
+		<step id="GCIM_MCIDB_ADMINS_IMPORT">
+			<tasklet>
+				<chunk reader="GCIM_MCIDB_ADMINS_READER" writer="GCIM_MCIDB_ADMINS_WRITER"
+					commit-interval="5000">
+				</chunk>
+				<listeners>
+					 <listener ref="BATCH_ERROR_LISTENER"/>					
+		        </listeners>
+			</tasklet>
+		</step>
+	</job>
+	<!-- ************ STRUCTURES_EMOLECULES ******************* -->
+	<bean id="STRUCTURES_EMOLECULES_READER"  class="com.merck.mrl.asap.integration.batch.FileSdfReader">
+		<property name="filePath" value="runtime/input/eMolecules.sdf"/>
+	</bean>
+	<bean id="STRUCTURES_EMOLECULES_WRITER"  class="com.merck.mrl.asap.integration.batch.SDFSqlDaoWriter">
+		<property name="formattedSQL">
+			<value>
+			INSERT
+		INTO CHEM_EMOLECULES_MOLS
+		  (
+		    MOLKEY,
+		    STRUCTUREKEY,
+		    CTAB,
+		    MOLWEIGHT,
+		    MOLFORMULA,
+		    MOLNAME,
+		    HCCEPTORS,
+		    HDONORS,
+		    MOLWEIGHT_FRAG,
+		    SMILES,
+		    EMOL_PARENT_ID,
+		    EMOL_LINK
+		  )
+		  VALUES
+		  (
+		    NVL(molnemakey(mol(?)),${EMOL_VERSION_ID}),
+		    ${EMOL_VERSION_ID},
+		    mol(?),
+		    molwt(mol(?)),
+		    isotopicformula(mol(?)),
+		    mdlaux.molname(?),
+		    null,
+		    null,
+		    null,
+		    mdlaux.smiles(mol(?)),
+		    ${EMOL_PARENT_ID},
+		    ${EMOL_LINK}
+		  )				
+			</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="moleculeInputCount" value="6"/>
+	</bean>
+  <!--   ************  MERCKACD *******************************-->
+	<bean id="STRUCTURES_MERCKACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select
+							CTAB,
+							MOLFORMULA,
+							DATESTAMP,
+							MOLECULAR_WEIGHT,
+							CDBREGNO,
+							MDLNUMBER,
+							MOLNAME,
+							MOLECULAR_FORMULA
+						from ECDSERMSTRUCT60.MRK_ACD2D_MOL
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_MERCKACD_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into MRK_ACD2D_MOL
+							(CTAB,
+							MOLFORMULA,
+							DATESTAMP,
+							MOLECULAR_WEIGHT,
+							CDBREGNO, --5
+							MDLNUMBER,
+							MOLNAME,
+							MOLECULAR_FORMULA) --8
+						values(?,?,?,?,?,?,?,?) 
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>	
+   <!--   ************  CAS *******************************-->
+	<bean id="STRUCTURES_ACD_CAS_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select
+							CASFLAG,
+							CDBREGNO,
+							CAS
+						from MOLACD.ACD2D_CAS
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_ACD_CAS_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into ACD2D_CAS
+							(CASFLAG,
+							CDBREGNO,
+							CAS)
+						values(SUBSTR(?,1,1),?,?)
+ 
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	
+	 <!--   ************  MCIDB security *******************************-->
+	  
+	<bean id="GCIM_MCIDB_ADMINS_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	SELECT VAX_USER_NAME, ISID, IS_ADMIN FROM ECDSDAT.GCIM_MCIDB_ADMINS 
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="mcidbDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="GCIM_MCIDB_ADMINS_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+			INSERT
+			INTO GCIM_MCIDB_ADMINS
+			  (
+				VAX_USER_NAME,
+				ISID,
+				IS_ADMIN
+			  )
+			  VALUES
+			  (
+				?,
+				?,
+				?
+			  )
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<bean id="GCIM_MCIDB_RESTRICTIONS_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	SELECT STRUCTKEY,
+							  VAX_USER_NAME,
+							  COMPOUND_ID,
+							  ISID,
+								  CDBREGNO
+						FROM ECDSDAT.GCIM_MCIDB_RESTRICTIONS
+						  where COMPOUND_ID is not null
+						  and COMPOUND_ID in
+								  ( select compound_id
+						FROM ecdspic60.RCG_STUFF_MOLTABLE
+													where compound_id is not null
+														and COMPOUND_ID in
+															(select LNUM
+															 from ECDSDAT.INV_CMPD_SAMPLES INV 
+															where  INV.AMOUNT > 0.1 
+																and UPPER(INV.UNITS) = 'G')     
+										  )
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="mcidbDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="GCIM_MCIDB_RESTRICTIONS_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+			INSERT
+			INTO GCIM_MCIDB_RESTRICTIONS
+			  (
+				STRUCTKEY,
+				VAX_USER_NAME,
+				COMPOUND_ID,
+				ISID,
+				CDBREGNO
+			  )
+			  VALUES
+			  (
+				?,
+				?,
+				?,
+				?,
+				?
+			  )
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<bean id="GCIM_MCIDB_RESTRICTIONS_Processor" class="solutions.dao.spring.batch.DAOCommandProcessor">
+		<property name="skipCommand">
+			<bean class="solutions.dao.patterns.command.HasResultsArrayableCommand">
+				<property name="dataSource" ref="dataSource" />
+				<property name="hasResultThanTrue" value="true"/>
+				<property name="sql"><value>SELECT 'Y' from GCIM_MCIDB_RESTRICTIONS 
+				                            where 	STRUCTKEY = ? and 
+													VAX_USER_NAME = ?
+									</value></property>
+				<property name="inputsPositions">
+					<list>
+					    <value>0</value>
+						<value>1</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="beforeCommand">
+			<bean class="solutions.dao.patterns.command.ExecuteUpdateArrayableCommand">
+				<property name="sql">
+					<value>
+						DELETE FROM GCIM_MCIDB_RESTRICTIONS WHERE CDBREGNO = ?
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+				<property name="inputsPositions">
+					<list>
+						<value>0</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>	
+	<!--   ************  PACKAGE *******************************-->
+	<bean id="STRUCTURES_ACD_PACKAGE_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+		<!--
+            Nullable number		
+			NORMQUANT
+			NORMPRICE
+			PRICE
+			LOTSIZE
+			QUANT
+		-->		
+				<value>	select
+							CDBREGNO,
+							PACKAGE_ID,
+							PRODUCT_ID,
+							CATALOG_ID,
+							CTNUM,
+							QUANTITY_STRING,
+							UNITS,
+							PRICE_STRING,
+							NVL(QUANT,-1),
+							NVL(LOTSIZE,-1),
+							NVL(PRICE,-1),
+							NVL(NORMPRICE, -1),
+							NVL(NORMQUANT, -1),
+							CURRENCY,
+							NOTES
+						from MOLACD.ACD2D_PACKAGE
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_ACD_PACKAGE_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into ACD2D_PACKAGE
+							(CDBREGNO,
+							PACKAGE_ID,
+							PRODUCT_ID,
+							CATALOG_ID,
+							CTNUM,             -- 5
+							QUANTITY_STRING,
+							UNITS,
+							PRICE_STRING,
+							QUANT,
+							LOTSIZE,  --10
+							PRICE,
+							NORMPRICE,
+							NORMQUANT,
+							CURRENCY,
+							NOTES) --15
+						values(?,?,?,?,?,?,?,?,?,?,
+						       ?,?,?,SUBSTR(?,1,3),?)
+ 
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<!--   ************  CATALOG *******************************-->
+	<bean id="STRUCTURES_ACD_CATALOG_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select
+							 CATALOG_ID,
+							COMPANY_ID,
+							TO_CHAR(CTCODEN_CHAR),
+							CTNAME,
+							CTLABEL,
+							CTNOTES,
+							ORDER_INFO,
+							COMPOUND_DESC,
+							COMPOUND_COUNT,
+							TO_CHAR(CURR_ISO),
+							CRREL,
+							RUREL,
+							RCREL,
+							CTCODEN
+						from MOLACD.ACD2D_CATALOG 
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_ACD_CATALOG_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into ACD2D_CATALOG
+							(  CATALOG_ID,
+							COMPANY_ID,
+							CTCODEN_CHAR,
+							CTNAME,
+							CTLABEL, --5
+							CTNOTES,
+							ORDER_INFO,
+							COMPOUND_DESC,
+							COMPOUND_COUNT,
+							CURR_ISO, --10
+							CRREL,
+							RUREL,
+							RCREL,
+							CTCODEN) --14
+						values(?,?,SUBSTR(?,1,12),?,?,?,?,?,?,SUBSTR(?,1,3),
+						       ?,?,?,?)
+ 
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<!--   ************  ACD *******************************-->
+	<bean id="STRUCTURES_ACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select
+							 CDBREGNO,
+							 CTAB, 
+							 MOLWEIGHT, 
+							 MOLFORMULA, 
+							 MDLNUMBER,  --5
+							 MOLNAME, 
+							 HACCEPTORS, 
+							 HDONORS,  
+							MOLECULAR_FORMULA, 							 
+							 MOLWEIGHT_FRAG, --10 
+							 smiles			
+						from MOLACD.ACD2D_MOLTABLE  --issues around 56308
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_MCIDB_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	SELECT CDBREGNO,
+							  CTAB,
+							  DATESTAMP,
+							  USERNAME_RECORD_CREATOR,
+							  PROJECT,
+							  CHEMICAL_CLASS,
+							  REMARKS,
+							  PBECL,
+							  BIO_RATIO_CALC,
+							  BIO_RATIO_EXP,
+							  LIBRARY_ID,
+							  COUNT_COMPON_EST,
+							  SOURCE_ID,
+							  IS_FORMULATION,
+							  IS_RADIOLABEL,
+							  COMMENTS_STEREO,
+							  COMPONENT_GROUP_ID,
+							  PLATE_ID,
+							  WELL_ID,
+							  TAG_ID,
+							  L_NUM_REQUEST,
+							  MP,
+							  BP,
+							  PARENT_FORMULA,
+							  NVL(PARENT_WEIGHT,-1),
+							  STUFF_FORMULA,
+							  STUFF_WEIGHT,
+							  NVL(PARENT_COUNT,-1),
+							  SALT_COUNT,
+							  COMMENTS,
+							  COMPOUND_ID,
+							  CREATION_DATE,
+							  CLIBRARY_ID,
+							  THERAPEUTIC_CLASS,
+							  NVL(BATCH_LOAD_ID,-1),
+							  NVL(BATCH_JOB_ID,-1),
+							  TARGET,
+							  OEB,
+							  TO_CHAR(ENTITY_TYPE)
+							FROM ecdspic60.RCG_STUFF_MOLTABLE mol
+							where compound_id is not null
+								and exists
+									(select 1
+									 from ECDSDAT.INV_CMPD_SAMPLES INV 
+									where  
+										mol.COMPOUND_ID = INV.LNUM
+									    and INV.AMOUNT > 0.1 
+										and UPPER(INV.UNITS) = 'G')
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="mcidbDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>	
+	
+	<bean id="STRUCTURES_MCIDB_Processor" class="solutions.dao.spring.batch.DAOCommandProcessor">
+		<property name="skipCommand">
+			<bean class="solutions.dao.patterns.command.HasResultsArrayableCommand">
+				<property name="dataSource" ref="dataSource" />
+				<property name="hasResultThanTrue" value="true"/>
+				<property name="sql"><value>SELECT 'Y' from RCG_STUFF_MOLTABLE where COMPOUND_ID = ? </value></property>
+				<property name="inputsPositions">
+					<list>
+					    <value>30</value>
+						</list>
+				</property>
+			</bean>
+		</property>
+		<property name="beforeCommand">
+			<bean class="solutions.dao.patterns.command.ExecuteUpdateArrayableCommand">
+				<property name="sql">
+					<value>
+						DELETE FROM RCG_STUFF_MOLTABLE WHERE COMPOUND_ID = ?
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+				<property name="inputsPositions">
+					<list>
+						<value>30</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_MCIDB_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>INSERT
+						INTO RCG_STUFF_MOLTABLE
+						  (
+						    CDBREGNO,
+						    CTAB,
+						    DATESTAMP,
+						    USERNAME_RECORD_CREATOR,
+						    PROJECT,
+						    CHEMICAL_CLASS,
+						    REMARKS,
+						    PBECL,
+						    BIO_RATIO_CALC,
+						    BIO_RATIO_EXP,
+						    LIBRARY_ID,
+						    COUNT_COMPON_EST,
+						    SOURCE_ID,
+						    IS_FORMULATION,
+						    IS_RADIOLABEL,
+						    COMMENTS_STEREO,
+						    COMPONENT_GROUP_ID,
+						    PLATE_ID,
+						    WELL_ID,
+						    TAG_ID,
+						    L_NUM_REQUEST,
+						    MP,
+						    BP,
+						    PARENT_FORMULA,
+						    PARENT_WEIGHT,
+						    STUFF_FORMULA,
+						    STUFF_WEIGHT,
+						    PARENT_COUNT,
+						    SALT_COUNT,
+						    COMMENTS,
+						    COMPOUND_ID,
+						    CREATION_DATE,
+						    CLIBRARY_ID,
+						    THERAPEUTIC_CLASS,
+						    BATCH_LOAD_ID,
+						    BATCH_JOB_ID,
+						    TARGET,
+						    OEB,
+						    ENTITY_TYPE
+						  )
+						  VALUES
+						  (
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?,
+						    ?
+						  )</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<!-- ============================================================================================ -->
+	<bean id="STRUCTURES_ACD_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				insert into ACD2D_MOLTABLE
+							(  CDBREGNO,
+							 CTAB, 
+							 MOLWEIGHT, 
+							 MOLFORMULA, 
+							 MDLNUMBER,  --5
+							 MOLNAME, 
+							 HACCEPTORS, 
+							 HDONORS,  
+							MOLECULAR_FORMULA, 							 
+							 MOLWEIGHT_FRAG, --10 
+							 smiles)
+						values(?,?,?,?,?,?,?,?,?,?,
+						       ?)
+ 
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+	<!-- ================================ -->
+	<bean id="STRUCTURES_ACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="STRUCTURES_ACD_DELETE_PREVIOUS_COMMAND"/>
+	</bean>
+	<bean id="STRUCTURES_ACD_DELETE_PREVIOUS_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from ACD2D_MOLTABLE
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<bean id="STRUCTURES_ACD_CATALOG_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+			<bean class="solutions.dao.executable.SqlExecutable">
+				<property name="sql">
+					<value>
+						delete from ACD2D_CATALOG
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>	
+		</property>
+	</bean>
+	
+	<bean id="STRUCTURES_ACD_PACKAGE_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+			<bean class="solutions.dao.executable.SqlExecutable">
+				<property name="sql">
+					<value>
+						delete from ACD2D_PACKAGE
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>	
+		</property>
+	</bean>
+	
+	<bean id="STRUCTURES_ACD_CAS_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+			<bean class="solutions.dao.executable.SqlExecutable">
+				<property name="sql">
+					<value>
+						delete from ACD2D_CAS
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>	
+		</property>
+	</bean>
+	
+	<bean id="STRUCTURES_MERCKACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+			<bean class="solutions.dao.executable.SqlExecutable">
+				<property name="sql">
+					<value>
+						delete from MRK_ACD2D_MOL
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>	
+		</property>
+	</bean>
+	<bean id="STRUCTURES_EMOLECULES_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+			<bean class="solutions.dao.executable.SqlExecutable">
+				<property name="sql">
+					<value>
+						truncate table CHEM_EMOLECULES_MOLS
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>	
+		</property>
+	</bean>
+	
+	
+	<bean id="STRUCTURES_MCIDB_SECURITY_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand">
+		<bean class="solutions.dao.executable.BatchSqlExecutable">
+				<property name="sqls">
+				     <list>
+					  <value><![CDATA[truncate table GCIM_MCIDB_RESTRICTIONS]]></value> 
+				      <value><![CDATA[truncate table GCIM_MCIDB_ADMINS]]></value> 
+				      </list>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+			</bean>
+		</property>
+	</bean>
+	<bean id="STRUCTURES_EMOLECULES_xmlSkipListener" class="solutions.dao.spring.batch.XmlInterpreterSkipListener">
+	  <property name="skipInReadFilePath" value="runtime/reports/EMOLECULES_skipInRead.xml"/>
+	  <property name="skipInProcessFilePath" value="runtime/reports/EMOLECULES_skipInProcess.xml"/>
+	  <property name="skipInWriteFilePath" value="runtime/reports/EMOLECULES_skipInWrite.xml"/>  
+	</bean>
+	
+	<bean id="ACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select molnemakey(CTAB), MDLNUMBER,'ACD' STRUCT_SOURCE_CD, NVL(DATESTAMP,SYSDATE), 'Y' IS_ACTIVE
+from molacd.ACD2D_MOLTABLE
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="acdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	<bean id="MCIDB_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select distinct molnemakey(CTAB), COMPOUND_ID,'MCIDB' STRUCT_SOURCE_CD, nvl(DATESTAMP, sysdate), 'Y' IS_ACTIVE
+						from ecdspic60.RCG_STUFF_MOLTABLE
+						where COMPOUND_ID is not null
+						and COMPOUND_ID in
+							(select LNUM
+							 from ECDSDAT.INV_CMPD_SAMPLES INV 
+							where  INV.AMOUNT > 0.1 
+								and UPPER(INV.UNITS) = 'G')
+
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="mcidbDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>	
+	
+	<bean id="MCIDB_Processor" class="solutions.dao.spring.batch.DAOCommandProcessor">
+		<property name="skipCommand">
+			<bean class="solutions.dao.patterns.command.HasResultsArrayableCommand">
+				<property name="dataSource" ref="dataSource" />
+				<property name="hasResultThanTrue" value="true"/>
+				<property name="sql"><value>select 'Y' from STRUCTURE_KEYS where MOLKEY = ? and STRUCTUREKEY = ? </value></property>
+				<property name="inputsPositions">
+					<list>
+					    <value>0</value>
+						<value>1</value>
+						</list>
+				</property>
+			</bean>
+		</property>
+		<property name="beforeCommand">
+			<bean class="solutions.dao.patterns.command.ExecuteUpdateArrayableCommand">
+				<property name="sql">
+					<value>
+						delete from STRUCTURE_KEYS where STRUCTUREKEY = ?
+					</value>
+				</property>
+				<property name="dataSource" ref="dataSource"/>
+				<property name="inputsPositions">
+					<list>
+						<value>1</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	
+	
+	
+	<!-- ================================ -->
+		
+	<bean id="MERCKACD_READER" class="org.springframework.batch.item.database.JdbcCursorItemReader">
+		<property name="sql">
+				<value>	select molnemakey(CTAB), MDLNUMBER,'MERCKACD' STRUCT_SOURCE_CD, nvl(DATESTAMP, sysdate), 'Y' IS_ACTIVE
+from ecdsermstruct60.MRK_acd2d_mol
+
+				</value>
+		</property>
+		<property name="dataSource">
+			<ref bean="merckAcdDataSource"/>
+		</property>
+		<property name="rowMapper">
+			<ref bean="rowMapper"/>
+		</property>
+	</bean>
+	
+   <bean id="STRUCTURE_KEYS_WRITER" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="sql">
+			<value>
+				INSERT into STRUCTURE_KEYS  (MOLKEY, STRUCTUREKEY,STRUCT_SOURCE_CD, LAST_MOD_DT, IS_ACTIVE)
+				 values(?,?,?,?,?)
+			</value>
+		</property>
+				<property name="dataSource">
+			<ref bean="dataSource"/>
+		</property>
+		<property name="itemPreparedStatementSetter">
+			<ref bean="itemPreparedStatementSetter"/>
+		</property>
+	</bean>
+
+	<bean id="ACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="ACD_DELETE_PREVIOUS_COMMAND"/>
+	</bean>
+	<bean id="ACD_DELETE_PREVIOUS_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from STRUCTURE_KEYS where STRUCT_SOURCE_CD = 'ACD'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
+	<!-- ====================== -->
+	
+	<bean id="MERCKACD_PREPROCESSOR" class="solutions.dao.spring.batch.CommandStepExecutionListener">
+		<property name="beforeCommand" ref="MERCKACD_DELETE_PREVIOUS_COMMAND"/>
+	</bean>
+	<bean id="MERCKACD_DELETE_PREVIOUS_COMMAND" class="solutions.dao.executable.SqlExecutable">
+		<property name="sql">
+			<value>
+				delete from STRUCTURE_KEYS where STRUCT_SOURCE_CD = 'MERCKACD'
+			</value>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+</beans>

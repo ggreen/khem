@@ -6,7 +6,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 
 <head>
-      <title>Merck ASAP Material Inventory Tool</title>
+      <title>KHEM - Knowledge Handling Every Molecule </title>
       <link type="text/css" rel="stylesheet" href="<c:url value="/common/css/site.css"/>"/>    
        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
        
@@ -24,16 +24,12 @@
    	
    	      if (http_request.overrideMimeType) 
    	      {
-   	
    	          http_request.overrideMimeType("text/xml"); 
-   	
    	      }
    	
    	   }
-   	
    	   else if( window.ActiveXObject)  //IE
    	   {
-   	
    	      try 
    	      {
    	    	http_request = new ActiveXObject("Msxml2.XMLHTTP");
@@ -41,17 +37,13 @@
             //http_request = new ActiveXObject("Msxml2.XMLHTTP");
    	
    	      }
-   	
    	      catch(e)
    	      {
    	         try
    	         {
-   	
    	            http_request = new ActiveXObject("Microsoft.XMLHTTP");
-   	
    	         }
    	         catch (e) {}
-   	
    	      }
    	
    	   }
@@ -61,7 +53,6 @@
    	   //unable to create XMLHTTP
    	
    	   if (!http_request) 
-   	
    	   {
    	
    	      alert("Giving up ( Cannot create an XMLHTTP instance");
@@ -69,9 +60,7 @@
    	      return false;
    	
    	   }
-   	
-   	
-   	
+
    	   return http_request;   
    	
    	}//-------------------------------------------------------------
@@ -98,7 +87,6 @@
        
        var web = new SolutionsGlobalWeb(theAJAX);
        var aldasMerckRender = new ALDaSMerckView(theAJAX,"<c:url value=""/>","<c:out value="${param.schemeCacheId}"/>","","<c:out value="${param.nodeId}"/>");
-       
        var mmRender = new MaterialMgmtView("<c:url value=""/>","<c:out value="${pageContext.session.id}"/>",theAJAX,web,aldasMerckRender.constructResultsMenuHTML);
        
        
@@ -111,9 +99,8 @@
 		<div class="headerContainer">
 			<div class="headerTop">
 				<div class="logo">
-					<img
-						alt="Merck & Co., Inc."
-						src="//a248.e.akamai.net/7/248/430/20091230155215/www.merck.com/images/global/logo_Merck_no_be_well.jpg"/>
+					<img src="<c:url value="/common/images/emc.png"/>"/>
+					<img src="<c:url value="/common/images/pivotal.png"/>"/>						
 				</div>
 			</div>
 			<!-- ****************** JDRAW  **************************   -->
