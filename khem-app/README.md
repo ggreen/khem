@@ -2,7 +2,7 @@
 
 The original is an example PCF/PCC test instance of the application.
 
-	[https://khemapp.pcfbeta.io/](https://khemapp.pcfbeta.io/) 
+[https://khemapp.pcfbeta.io/](https://khemapp.pcfbeta.io/)
 
 ## Building
 
@@ -11,7 +11,7 @@ Adding gradle.properties
 Example configuration for gemfire-release-repo
 This is example configuration which you will need to place into your build.gradle
 
-                                        
+
 To access these artifacts, you must add an entry to gradle.properties
 
     gemfireReleaseRepoUser=user
@@ -39,7 +39,7 @@ Use the following the push the initial application
 
 	cf create-service p-cloudcache dev-plan pcc
 
-	cf create-service p-cloudcache dev-plan pccHttp -t session-replication 
+	cf create-service p-cloudcache dev-plan pccHttp -t session-replication
 
 	cf create-service-key pcc khemKey
 
@@ -56,7 +56,7 @@ Use the following the push the initial application
 
 
 Example output
-	
+
 
 	{
 	 "distributed_system_id": "0",
@@ -96,21 +96,21 @@ Example output
 
 ## Local GemFire
 
-	
+
 **Connect to gfsh**
 
 	gfsh>connect --use-http=yes --url=https://cloudcache-1b925d95-aa38-4cb4-8fd0-94fafc822d0c.run.pcfbeta.io/gemfire/v1
 
-	
+
 Configure GemFire connection
 
 	cf set-env khemApp LOCATOR_HOST host
 	cf set-env khemApp LOCATOR_PORT port
 	cf set-env khemApp SECURITY_USER user
 	cf set-env khemApp SECURITY_PASSWORD password
-	
-	
-	
+
+
+
 # Useful PCF Commands
 
 Key PCC
@@ -118,4 +118,3 @@ Key PCC
 	cf delete-service-key pcc khemKey
 	cf unbind-service khemApp pcc
 	cf delete-service pcc
-
