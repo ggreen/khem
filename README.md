@@ -5,5 +5,5 @@ This a simple demo to using PCF and Pivotal Cloud Cache.
 
 Sub Project
 
-- (khem-app)[https://github.com/ggreen/khem/tree/master/khem-app]
+- [khem-app](https://github.com/ggreen/khem/tree/master/khem-app)
 
