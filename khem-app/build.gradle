@@ -1,0 +1,80 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.M7'
+	}
+	repositories {
+		mavenCentral()
+		maven { url "https://repo.spring.io/snapshot" }
+		maven { url "https://repo.spring.io/milestone" }
+		mavenLocal()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.github.nyla-solutions'
+archivesBaseName = "khem-app"
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+	maven { url "https://repo.spring.io/snapshot" }
+	maven { url "https://repo.spring.io/milestone" }
+	maven { url "https://repo.spring.io/milestone" }
+	 maven {
+            credentials {
+                username "$gemfireReleaseRepoUser"
+                password "$gemfireReleaseRepoPassword"
+            }
+            url "https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire"
+        }
+	
+	mavenLocal()
+}
+
+
+dependencies {
+
+	compile('org.springframework.boot:spring-boot-starter-web')
+	//-------------
+	compile 'io.pivotal.gemfire:geode-core:9.2.0'
+	compile 'io.pivotal.gemfire:geode-wan:9.2.0'
+	compile 'io.pivotal.gemfire:geode-cq:9.2.0'
+	// https://mvnrepository.com/artifact/com.github.nyla-solutions/gedi-geode-extensions-core
+	compile group: 'com.github.nyla-solutions', name: 'gedi-geode-extensions-core', version: '1.1.3'
+	compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'	
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'   
+    compile 'org.freemarker:freemarker:2.3.21'
+    compile 'javax.mail:javax.mail-api:1.5.2'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.2'
+    compile group:  'commons-net', name: 'commons-net', version: '3.3'
+    compile 'org.freemarker:freemarker:2.3.21'
+    compile 'javax.mail:javax.mail-api:1.5.2'
+  	compile 'javax.jms:javax.jms-api:2.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.2'
+    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
+    compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.2'
+     compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    compile 'log4j:log4j:1.2.17'
+	     
+	compile group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.1.1'
+	//---------------
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+
+configurations.all {
+   exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+   exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
+   exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
+   exclude group: 'javax.servlet'
+}
