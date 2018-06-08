@@ -1,9 +1,0 @@
-run --file=./start-server-01.gfsh
-run --file=./start-server-02.gfsh
-run --file=./start-server-03.gfsh
-run --file=./start-server-04.gfsh
-run --file=./start-server-05.gfsh
-run --file=./start-server-06.gfsh
-run --file=./start-server-07.gfsh
-run --file=./start-server-08.gfsh
-run --file=./start-server-09.gfsh

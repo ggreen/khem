@@ -1,4 +1,0 @@
-start locator --name=local --mcast-port=0
-
-connect 
-list members
