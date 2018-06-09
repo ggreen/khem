@@ -12,7 +12,7 @@
      <script type="text/javascript">
      function findMolecules()
 		{
-			showRequired("");
+			clear();
 			var searchCriteria = getSearchCriteria();
 			
 			if(searchCriteria == null)
@@ -125,7 +125,7 @@
 <br/>
 <div>
 <form name="searchCriterForm" onsubmit="return false;">
-  <input type="radio" name="how" value="BySMILES" checked="checked"> By SMILE <input type="radio" name="how" value="ByWeigth"> By Weight <button onclick="findMolecules()">Find</button>
+  <input type="radio" name="how" value="BySMILES" checked="checked"> By SMILE <input type="radio" name="how" value="ByWEIGHT"> By Weight <button onclick="findMolecules()">Find</button>
 </form>
 
 <br/>

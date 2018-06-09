@@ -99,7 +99,7 @@ Example output
 
 **Connect to gfsh**
 
-	gfsh>connect --use-http=yes --url=https://cloudcache-1b925d95-aa38-4cb4-8fd0-94fafc822d0c.run.pcfbeta.io/gemfire/v1
+	gfsh>connect --use-http=yes --url=https://cloudcache-57689bd0-d810-40cd-9d79-00c1b5184288.run.pcfbeta.io/gemfire/v1
 
 
 Configure GemFire connection

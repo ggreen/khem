@@ -16,7 +16,8 @@ public class MaterialCriteria implements Serializable
 {
 	public enum MaterialCriteriaType
 	{
-		BySMILES
+		BySMILES,
+		ByWEIGHT
 	};
 	
 	/**
