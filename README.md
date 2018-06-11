@@ -55,10 +55,10 @@ See the coding example below.
     }
 
 It supports SQL like
-queries through its object query language.  With QOL you can select objects by particular
-attribute in a where clause. Its support simple and complex queries (nested queries).
+queries through its object query language.  With QOL you can select objects by a particular
+attribute in a where clause. It supports simple and complex queries (nested queries).
 
-For a "molecules" region, QOL allows you to perform a search such as
+For a "molecules" region, QOL would allow you to perform a search such as
 
     select * from /molecules where smile = 'C'
 
@@ -70,7 +70,7 @@ For a "molecules" region, QOL allows you to perform a search such as
 
 ## Other Features
 
-GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures), full-text searches and more. The GemFire use case tends to be based on FAST data access patterns. See (https://pivotal.io/pivotal-gemfire)[https://pivotal.io/pivotal-gemfire] for more details on GemFire.
+GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures), full-text searches and more. The GemFire use case tends to be based on FAST data access patterns. See [https://pivotal.io/pivotal-gemfire](https://pivotal.io/pivotal-gemfire) for more details on GemFire.
 
 ## Pivotal Cloud Foundry (PCF)
 
