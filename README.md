@@ -85,7 +85,7 @@ See [https://12factor.net/](https://12factor.net/) for details.
 PCF allows users to manually or auto scale application instances to meet increase
 capacity demands. Cloud native applications are stateless. Any information that is stateful
 must be available to all application instances.  Cached state information can be
-managed in a backing service. GemFire implementation of the caching backing service
+managed in a backing service. GemFire implementation of a caching backing service
 is called [Pivotal Cloud Cache](https://docs.pivotal.io/p-cloud-cache/1-0/index.html) (PCC).
 
 PCC allows the user to quickly provision multiple environment instances of GemFire.
