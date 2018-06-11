@@ -86,7 +86,7 @@ managed in a backing service. GemFire implementation of the caching backing serv
 is called Pivotal Cloud Cache (PCC).
 
 PCC allows the user to quickly provision multiple environment instances of GemFire.
-An instance can be based on a select plan that dictates the number of locators/data nodes and the size of the cache.
+An instance can be based on a desired plan that dictates the number of locators/data nodes and the size of the cache.
 Complex environments can be quickly created with simple commands
 
 Example command to create a PCC instance
@@ -97,6 +97,7 @@ Example command to create a PCC instance
 You access also bind PCC instance to an application so that the connections and
 credentials details are securely provided to consuming applications.
 
+    cf bind-service <app> <name>
 
 # Sub Project
 
