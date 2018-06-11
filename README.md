@@ -27,8 +27,8 @@ The cache implementation is Pivotal GemFire. GemFire is an In-Memory Data Grid (
 GemFire's two main components are a locator and cache server (a.k.a data node).
 The client connects to a locator to find its data.  
 
-All data is stored on the cache server. Cache servers/data node register with locators
-to be discovered by clients or other data nodes. The number of data node can be
+All data is stored on the cache server. Cache servers/data nodes register with locators
+to be discovered by clients or other data nodes. The number of data nodes can be
 scaled up to handle increased data or clients.
 
 ### GemFire Regions
@@ -40,7 +40,21 @@ configured number of backup copies.
 
 ### Data Access
 
-GemFire supports NO SQL operations to get region entry objects very quickly by a key. It supports SQL like
+GemFire supports NO SQL operations to get region entry objects very quickly by a key.
+Regions are based on key/value pairs. Users can get a
+entry object directly from a region "get" operation by providing the key identifier.
+See the coding example below.
+
+
+    @Resource
+    Region<String, Molecule> molecules;
+
+    Molecule findMolecule(String key)
+    {
+        return molecules.get(key)
+    }
+
+It supports SQL like
 queries through its object query language.  With QOL you can select objects by particular
 attribute in a where clause. Its support simple and complex queries (nested queries).
 
@@ -52,18 +66,6 @@ For a "molecules" region, QOL allows you to perform a search such as
 
 
 
-Regions are based on key/value pairs that support noSQL operations. Users can get a
-entry object directly from a region "get" operation by providing key identifier.
-See the coding example below.
-
-
-    @Resource
-    Region<String, Molecule> molecules;
-
-    Molecule findMolecule(String key)
-    {
-        return molecules.get(key)
-    }
 
 
 ## Other Features
