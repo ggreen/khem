@@ -97,7 +97,7 @@ Example command to create a PCC instance
     cf create-service p-cloudcache <plan> <name>
 
 
-You access also bind PCC instance to all application instances so that the connections and
+You can bind PCC service instances to  application instances so that the connections and
 credentials details are securely provided to consuming applications.
 
     cf bind-service <app> <name>
