@@ -68,7 +68,7 @@ For a "molecules" region, QOL would allow you to perform a search such as
 It supports simple and complex queries (nested queries).
 
 
-## Other Features
+### Other Features
 
 GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures), full-text searches and more. The GemFire use case tends to be based on FAST data access patterns. See [https://pivotal.io/pivotal-gemfire](https://pivotal.io/pivotal-gemfire) for more details on GemFire.
 
