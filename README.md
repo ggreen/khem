@@ -56,7 +56,7 @@ See the coding example below.
 
 It supports SQL like
 queries through its Object Query Language (OQL).  With [QOL](http://gemfire.docs.pivotal.io/93/geode/developing/querying_basics/chapter_overview.html) you can select objects by a particular
-attribute in a where clause. It supports simple and complex queries (nested queries).
+attribute in a where clause.
 
 For a "molecules" region, QOL would allow you to perform a search such as
 
@@ -65,7 +65,7 @@ For a "molecules" region, QOL would allow you to perform a search such as
     select * from /molecules where formula = 'H20' or (weight > 18.0 and weight < 20)
 
 
-
+It supports simple and complex queries (nested queries).
 
 
 ## Other Features
