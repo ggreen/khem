@@ -4,10 +4,10 @@
 This document provides an introduction to GemFire's Pivotal Cloud Cache (PCC)
 implementation within Pivotal Cloud Foundry (PCF).
 
-This document outlines how application can store some objects in a cache. It can allows users
+This document outlines how application can store some objects in a cache. It can allow users
 to build information knowledge managed in these object.
 
-The (KHEM)[https://khemapp.pcfbeta.io/] demo application is based on a pharma life-science based use case.
+The [KHEM](https://khemapp.pcfbeta.io/) demo application is based on a pharma life-science based use case.
 The objects, in this case, are molecules. The molecule object attributes will
 be populated using a web-based scientific molecule editor called JSDraw.
 A user can store molecule attributes in the cache.
