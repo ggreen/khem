@@ -79,9 +79,12 @@ Foundry, named Pivotal Cloud Foundry. Cloud Foundry is an opinionated cloud-nati
 platform that forces implement to maintain the 12-factor based principals.
 See [https://12factor.net/](https://12factor.net/) for details.
 
+
 ## Pivotal Cloud Cache (PCC)
 
-The cloud native applications are stateless. Any information that is cached or stateful is
+PCF allows users to manually or auto scale application instances to meet increase
+capacity demands. Cloud native applications are stateless. Any information that is stateful
+must be available to all application instances.  Cached state information can be
 managed in a backing service. GemFire implementation of the caching backing service
 is called [Pivotal Cloud Cache](https://docs.pivotal.io/p-cloud-cache/1-0/index.html) (PCC).
 
@@ -94,7 +97,7 @@ Example command to create a PCC instance
     cf create-service p-cloudcache <plan> <name>
 
 
-You access also bind PCC instance to an application so that the connections and
+You access also bind PCC instance to all application instances so that the connections and
 credentials details are securely provided to consuming applications.
 
     cf bind-service <app> <name>
