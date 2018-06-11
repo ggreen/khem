@@ -1,17 +1,20 @@
 package io.pivotal.pde.khem;
 
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.annotation.Resource;
 import org.apache.geode.cache.Region;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import gedi.solutions.geode.io.Querier;
 import io.pivotal.pde.khem.data.KHEMCriteria;
 import io.pivotal.pde.khem.data.MaterialCriteria;
 import io.pivotal.pde.khem.data.MaterialCriteria.MaterialCriteriaType;
 import io.pivotal.pde.khem.data.Molecule;
 
 /**
+ * Handles data access for molecule information
+ * 
  * @author Gregory Green
  *
  */
@@ -69,13 +72,48 @@ public class MoleculeMgmt implements MoleculeService
 		if (materialCriteriaType == null)
 			throw new IllegalArgumentException("materialCriteriaType is required");
 		
+		Collection<Molecule> moles = null;
 		switch(materialCriteriaType)
 		{
-		  case BySMILES: Collection<Molecule> moles = Querier.query("select * from /molecules where canonicalSMILES = '"+structureCriteria.getSmiles()+"'");
-			return moles;
-			default: throw new IllegalArgumentException("Unsupported search type:"+materialCriteriaType);
+		  case BySMILES: moles = querierService.query("select * from /molecules where canonicalSMILES = '"+structureCriteria.getSmiles()+"'");
+			break;
+	
+		  case BySourceAndName: 
+			  String source = structureCriteria.getSource();
+			  if (source == null || source.length() == 0)
+				throw new IllegalArgumentException("source is required");
+			  
+			  String name = structureCriteria.getName();
+			  if (name == null || name.length() == 0)
+				throw new IllegalArgumentException("name is required");
+			  
+			  Molecule molecule = this.moleculesRegion.get(generateId(source, name));
+			  if(molecule == null)
+				  return null;
+			  
+			  moles = Collections.singleton(molecule);
+	
+			  break;
+		  case ByWEIGHT:
+			  Double weight = structureCriteria.getWeight();
+			  
+			  if (weight == null)
+				throw new IllegalArgumentException("weight is required");
+			  
+			  moles = this.querierService.query("select * from /molecules where weight = "+weight);
+			break;
+		  case ByFORMULA:
+			  String formula = structureCriteria.getFormula();
+			  if (formula == null || formula.length() == 0)
+				throw new IllegalArgumentException("formula is required");
+			  
+			  moles = this.querierService.query("select * from /molecules where formula = '"+formula+"'");
+	       break;
+	       
+		  default: throw new IllegalArgumentException("Unsupported search type:"+materialCriteriaType);
 		}
-				
+		
+		return moles;
 	}//------------------------------------------------
 
 	private String generateId(String sourceCode, String name)
@@ -86,4 +124,7 @@ public class MoleculeMgmt implements MoleculeService
 	
 	@Resource
 	Region<String,Molecule> moleculesRegion;
+	
+	@Autowired
+	QuerierService querierService;
 }

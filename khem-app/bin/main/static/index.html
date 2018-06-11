@@ -24,8 +24,24 @@
 			 var jsdraw = JSDraw.get("test");
 			  var molStringFile = jsdraw.getMolfile();
 			  var smiles = jsdraw.getSmiles();
-			  
-			  if((smiles == null || smiles.length == 0) && searchCriteria == "BySMILES")
+			  var formula  = jsdraw.getFormula(true);
+		      var weight = jsdraw.getMolWeight();
+		      var source = document.getElementById("source").value;
+		      var name = document.getElementById("moleculeName").value;
+		      
+			  if(searchCriteria == "BySourceAndName")
+			  {
+				  if(source == null || source.length == 0)
+				  {
+					  return showRequired("Source");
+				  }
+				  
+				  if(name == null || name.length == 0)
+				  {
+					  return showRequired("Name");
+				  }
+			  }
+		      else if(smiles == null || smiles.length == 0)
 			  {
 			      return showRequired("Drawn valid molecule in editor. For example, try benzene.");
 			  }
@@ -36,17 +52,31 @@
 			var xhttp = new XMLHttpRequest();
 			  xhttp.open("POST", "findMolecules",  true);
 			  xhttp.setRequestHeader("Content-Type", "application/json");
-			  xhttp.onreadystatechange = function() {
+			  
+			  var khemCriteria = {
+					  "structureCriteria" : {
+						  "molString" : molStringFile,
+						  "weight" : weight,
+						  "formula" : formula,
+						  "searchType": searchCriteria,
+						  "smiles" : smiles,
+			  			  "source": source,
+			  			  "name": name
+						  }
+			  };
+			  
+			  var json = JSON.stringify(khemCriteria);
+			  
+			  //Response handler
+			   xhttp.onreadystatechange = function() {
 			        if (this.readyState == 4 && this.status == 200) 
 			        {
-			        	
-			        		//Handle not records found
-			        		if(this.responseText == null || this.responseText.length == 0)
-			        		{
-			        			document.getElementById("moleculesPanel").innerHTML = "No data found";
-			        			return;
-			        			
-			        		}
+			        	//Handle not records found
+			        	if(this.responseText == null || this.responseText.length == 0)
+			        	{
+			        		document.getElementById("moleculesPanel").innerHTML = "No data found";
+			        		return;
+			        	}
 			        	
 			        	parent.moleculeArray =  JSON.parse(this.responseText);
 			        	var tableHtml = "";
@@ -61,7 +91,6 @@
 			        		else
 			        			rowClass =  "odd";
 			        		
-			        		//onmouseover='JSDra1w.get(\"div1\").setMolfile(\""+moleculeArray[0].molString+"\")'
 			        		tableHtml += "<tr class="+rowClass+" id=moleRow"+i+" onclick='viewMolecule("+i+")'>"+
 			        			    "<td>"+parent.moleculeArray[i].sourceCode+"</td>"+
 			        			    "<td>"+parent.moleculeArray[i].name+"</td>"+
@@ -70,8 +99,6 @@
 			        				;
 			        		
 			        		//add mol file
-			        		//tableHtml += "<td onmouseover='JSDraw.get(\"div1\").setMolfile("+moleculeArray[0].molString+")'><div class='JSDraw' id='div1' style='width: 330px; height: 330px;border:1px solid gray' viewonly popup dataformat='molfile' data='"+moleculeArray[0].molString+"'></div></td>";
-			        		
 			        		tableHtml += "</tr>";
 			        	}
 			        	 
@@ -92,29 +119,18 @@
 			    	   document.getElementById("moleculesPanel").innerHTML = errorText;
 			       }
 			  };
-			     
-			
-			  
-			  var khemCriteria = {
-					  "structureCriteria" : {
-						  "pageCriteria" : {
-								"size": 100
-							},
-						  "molString" : molStringFile,
-						  "searchType": searchCriteria,
-						  "smiles" : smiles,
-			  			  "sources": ["eMolecules"]
-						  }
-			  };
-			  //var mater
-			  var json = JSON.stringify(khemCriteria);
-			  //alert("json:"+json);
 			  
 			  xhttp.send(json);
 			
-			
 			return 0;
 		}//----------------------------------------------------------
+		function copyViewerToEditor()
+		{
+			JSDraw.get("test").setHtml(JSDraw.get("div1").getHtml());
+			
+			 document.getElementById("source").value = moleculeArray[currentSelectedRow].sourceCode;
+		     document.getElementById("moleculeName").value = moleculeArray[currentSelectedRow].name;
+		}
      </script>
   </head>
 <body>
@@ -125,10 +141,12 @@
 <br/>
 <div>
 <form name="searchCriterForm" onsubmit="return false;">
-  <input type="radio" name="how" value="BySMILES" checked="checked"> By SMILE <input type="radio" name="how" value="ByWEIGHT"> By Weight <button onclick="findMolecules()">Find</button>
+  <input type="radio" name="how" value="BySMILES" checked="checked"> By SMILE 
+  <input type="radio" name="how" value="ByWEIGHT"> By Weight
+  <input type="radio" name="how" value="ByFORMULA"> By Formula
+  <input type="radio" name="how" value="BySourceAndName"> By Source and Name 
+  <button onclick="findMolecules()">Find</button>
 </form>
-
-<br/>
 <br/>
 <!--  -->
 <table>
@@ -136,10 +154,9 @@
 		<td>Source:</td><td><input id="source" type="text" name="source"></input></td>
 		<td>&nbsp;</td>
 		<td>Name:</td><td><input id="moleculeName" type="text" name="moleculeName"></input></td>
-		<td><button onclick="saveMolecule();">Save</button></td>
 	</tr>
 	<tr>
-		<td colspan="6"><div id="requiredPanel"></div></td>
+		<td colspan="5"><div id="requiredPanel"></div></td>
 	</tr>
 </table>
 	 
@@ -155,11 +172,13 @@ Editor:<br />
 <!--  Molecule viewer -->
 <div class='JSDraw' id="div1" style="z-index:10; position: fixed;left:710px; top:100px;width: 330px; height: 330px;border:1px solid gray" viewonly popup dataformat='molfile' data=''></div>
 <!-- ============================== -->
+<p><button onclick="saveMolecule();">&nbsp;Save&nbsp;</button></p>
+<!-- ============================== -->
 <button onclick='alert(JSDraw.get("test").getMolfile())'>Get Molfile</button>
 <button onclick='alert(JSDraw.get("test").getRxnfile())'>Get Rxnfile</button>
 <button onclick='alert(JSDraw.get("test").getSmiles())'>Get Smiles</button>
 <!-- <button onclick='alert(JSDraw.get("test").getHtml())'>Get Html</button> -->
-<button onclick='JSDraw.get("test").setHtml(JSDraw.get("div1").getHtml())'>Copy Viewer to Editor</button>
+<button onclick='copyViewerToEditor()'>Copy Viewer to Editor</button>
 <!-- <button onclick='JSDraw.get("test").sss(JSDraw.get("div1"))'>View Substructure</button> -->
 <br />
 
@@ -204,7 +223,6 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
         document.getElementById('formula').innerHTML = jsdraw.getFormula(true);
         document.getElementById('mw').innerHTML = jsdraw.getMolWeight();
     }//-----------------------------------------
-    
     function viewMolecule(i)
     {
     		//alert(moleculeArray[i].molString);
@@ -218,18 +236,15 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
     		var row = document.getElementById('moleRow'+i);
     		
     		row.className = "select";
-    		
-    		
+
     		JSDraw.get("div1").setMolfile(moleculeArray[i].molString);
     		
     		currentSelectedRow = i;
-    		
-    		
+
     }//---------------------------------------------------------------------
-     function showError(errorText)
+    function showError(errorText)
     {
-    	
-    	 var redText  = "";
+       	 var redText  = "";
     	 
     	 if(errorText.length > 0)
     	 {
@@ -249,7 +264,6 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
     }//---------------------------------------------------------------------
     function showRequired(msg)
     {
-    	
     	var text  = "";
     	
     	if(msg.length > 0)
@@ -257,13 +271,11 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
     	   	text = "<div style='color:red'>"+msg+" is required</div>";
     	}
    	   
- 	     document.getElementById("requiredPanel").innerHTML = text;
+ 	    document.getElementById("requiredPanel").innerHTML = text;
     }
-    
     </script>
 
 	<script  type="text/javascript">
-		
 		function clear()
 		{
 			  showRequired("");
@@ -296,7 +308,6 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
 			   {
 					  return showRequired("Least one valid drawn molecule in editor");
 			   }
-			   
 			   
 			   //create molecule object
 			   var molecule = {

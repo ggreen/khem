@@ -7,19 +7,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.mockito.Mockito.*;
 
+import java.util.Collection;
 import io.pivotal.pde.khem.data.KHEMCriteria;
+import io.pivotal.pde.khem.data.MaterialCriteria;
 import io.pivotal.pde.khem.data.Molecule;
+import io.pivotal.pde.khem.data.MaterialCriteria.MaterialCriteriaType;
 
 public class MoleculeMgmtTest
-{
-
+{	
+	@SuppressWarnings("unchecked")
 	@BeforeClass
 	public static void setUp()
 	{
 		Region<String,Molecule> region = mock(Region.class);
+		QuerierService querierService = mock(QuerierService.class);
 		mgmt = new MoleculeMgmt();
 		mgmt.moleculesRegion = region;
-	}
+		when(region.get("valid|valid")).thenReturn(molecule);
+		mgmt.querierService = querierService;
+	}//------------------------------------------------
 	@Test
 	public void testSaveMolecule()
 	{
@@ -40,7 +46,7 @@ public class MoleculeMgmtTest
 		molecule.setMolString("MOLE");
 		
 		assertEquals(mgmt.saveMolecule(molecule),molecule);
-	}
+	}//------------------------------------------------
 
 	@Test
 	public void testFindMolecules()
@@ -53,7 +59,57 @@ public class MoleculeMgmtTest
 		fail();
 		}
 		catch(Exception e) {}
+	}//------------------------------------------------
+	@Test
+	public void testFindBySourceAndName() throws Exception
+	{
+		String source = "invalid";
+		String name = "valid";
+		
+		KHEMCriteria criteria = new KHEMCriteria();
+		criteria.setStructureCriteria(new MaterialCriteria());
+		criteria.getStructureCriteria().setSearchType(MaterialCriteriaType.BySourceAndName);
+		
+		try{mgmt.findMolecules(criteria); fail();} catch(Exception e) {}
+		criteria.getStructureCriteria().setSource(source);
+		
+		try{mgmt.findMolecules(criteria); fail();} catch(Exception e) {}
+		criteria.getStructureCriteria().setName(name);
+		
+		Collection<Molecule> molecules = mgmt.findMolecules(criteria);
+		assertNull(molecules);
+		 source = "valid";
+		 criteria.getStructureCriteria().setSource(source);
+		 
+		 molecules = mgmt.findMolecules(criteria);
+		 assertNotNull(molecules);
+		
+		assertTrue(!molecules.isEmpty());
+	}//------------------------------------------------
+	@Test
+	public void testFindByWeight() throws Exception
+	{
+		
+		KHEMCriteria criteria = new KHEMCriteria();
+		criteria.setStructureCriteria(new MaterialCriteria());
+		criteria.getStructureCriteria().setSearchType(MaterialCriteriaType.ByWEIGHT);
+		criteria.getStructureCriteria().setWeight(10.01);
+		Collection<Molecule> molecules = mgmt.findMolecules(criteria);
+		assertNotNull(molecules);
+		
 	}
-
+	@Test
+	public void testFindByFormula() throws Exception
+	{
+		
+		KHEMCriteria criteria = new KHEMCriteria();
+		criteria.setStructureCriteria(new MaterialCriteria());
+		criteria.getStructureCriteria().setSearchType(MaterialCriteriaType.ByFORMULA);
+		criteria.getStructureCriteria().setFormula("C");
+		Collection<Molecule> molecules = mgmt.findMolecules(criteria);
+		assertNotNull(molecules);
+		
+	}
+	private static Molecule molecule = new Molecule();
 	private static MoleculeMgmt mgmt = new MoleculeMgmt();
 }
