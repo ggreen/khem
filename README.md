@@ -1,18 +1,18 @@
 # PDE GemFire/PCC Demo
 ## Knowledge Handling Every Molecule
 
-This a demo to uses PCF and Pivotal Cloud Cache.
+This document provides an introduction to GemFire's Pivotal Cloud Cache (PCC)
+implementation within Pivotal Cloud Foundry (PCF).
 
-This example will store some objects in a cache. It allows users
+This document outlines how application can store some objects in a cache. It can allows users
 to build information knowledge managed in these object.
 
-
-This particular application is based on a pharma life-science based use case.
+The (KHEM)[https://khemapp.pcfbeta.io/] demo application is based on a pharma life-science based use case.
 The objects, in this case, are molecules. The molecule object attributes will
 be populated using a web-based scientific molecule editor called JSDraw.
-A user will be able to store molecule attributes in the cache.
+A user can store molecule attributes in the cache.
 
-The molecule has attributes such as:
+The molecule object has attributes such as:
 
 - *SMILES* - a calculated string representation of the molecule structure in a shortened form.
 - *Molfile* - a calculated verbose representation of the molecule that holds additional information.
