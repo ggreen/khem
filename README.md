@@ -29,8 +29,9 @@ attribute in a where cause. It support simple and complex queries (nested querie
 
 OQL allows you to perform search such as
 
-  select * from /molecules where smile = 'C'
-  select * from /molecules where formula = 'H20' or (weight > 18.0 and weight < 20)
+    select * from /molecules where smile = 'C'
+
+    select * from /molecules where formula = 'H20' or (weight > 18.0 and weight < 20)
 
 
 GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures) , full text searches and more. The GemFire use cause
@@ -38,7 +39,7 @@ tend to be based on FAST data access patterns.
 
 
 The following demo implementation of this application is deployed on Pivotal implement of Cloud
-Foundry, named Pivotal Cloud Foundry. 
+Foundry, named Pivotal Cloud Foundry.
 
 
 
