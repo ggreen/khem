@@ -21,6 +21,8 @@ Molecule has attributes such as
 - Source - user entered associate the molecule for example a manufacture or scientist.
 - Name - user entered label for the molecule such as the related experiment or project
 
+## GemFire
+
 The cache implementation is Pivotal GemFire. GemFire is an In Memory Data Grid (IMDG).
 It supports NO SQL operations to get object very quickly by a key. It support SQL like
 queries through it's object query language. With OQL you can select object by particular
@@ -35,11 +37,21 @@ OQL allows you to perform search such as
 
 
 GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures) , full text searches and more. The GemFire use cause
-tend to be based on FAST data access patterns.
+tend to be based on FAST data access patterns. See (https://pivotal.io/pivotal-gemfire)[https://pivotal.io/pivotal-gemfire] for more details on GemFire.
+
+## Pivotal Cloud Foundry (PCF)
+
+The demo implementation of this application is deployed on Pivotal implement of Cloud
+Foundry, named Pivotal Cloud Foundry. Cloud Foundry is an opinionated cloud native
+application that forces implement to maintain the 12-factor based principals.
+See (https://12factor.net/)[https://12factor.net/] for details.
+
+## Pivotal Cloud Cache (PCC)
+
+The PCF applications are state-less. Any information that is cached or stateful is
+managed in a backing service.
 
 
-The following demo implementation of this application is deployed on Pivotal implement of Cloud
-Foundry, named Pivotal Cloud Foundry.
 
 
 
