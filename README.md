@@ -1,7 +1,7 @@
 # PDE GemFire/PCC Demo
 ## Knowledge Handling Every Molecule
 
-This document provides an introduction to GemFire's Pivotal Cloud Cache (PCC)
+This document provides an introduction to [Pivotal GemFire](https://pivotal.io/pivotal-gemfire)'s [Pivotal Cloud Cache](https://docs.pivotal.io/p-cloud-cache/1-0/index.html)(PCC)
 implementation within Pivotal Cloud Foundry (PCF).
 
 This document outlines how application can store some objects in a cache. It can allow users
