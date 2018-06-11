@@ -81,20 +81,24 @@ See [https://12factor.net/](https://12factor.net/) for details.
 
 ## Pivotal Cloud Cache (PCC)
 
-The PCF applications are stateless. Any information that is cached or stateful is
-managed in a backing service. GemFire implementation of the PCF backing service
+The cloud native applications are stateless. Any information that is cached or stateful is
+managed in a backing service. GemFire implementation of the caching backing service
 is called Pivotal Cloud Cache (PCC).
 
 PCC allows the user to quickly provision multiple environment instances of GemFire.
-An instance can be based on a select plan that dictates the size of the cache.
+An instance can be based on a select plan that dictates the number of locators/data nodes and the size of the cache.
 Complex environments can be quickly created with simple commands
-(Ex: cf create-service p-cloudcache <plan> <name>).
+
+Example command to create a PCC instance
+
+    cf create-service p-cloudcache <plan> <name>
+
 
 You access also bind PCC instance to an application so that the connections and
 credentials details are securely provided to consuming applications.
 
 
-Sub Project
+# Sub Project
 
 The idea of this demo application is to allow scientist to determine similar molecule based
 on SMILES, formulas, weights and etc.
