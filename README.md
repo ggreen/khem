@@ -23,7 +23,7 @@ The molecule object has attributes such as:
 
 ## GemFire
 
-The cache implementation is Pivotal GemFire. GemFire is an In-Memory Data Grid (IMDG).
+The cache implementation is [Pivotal GemFire](https://pivotal.io/pivotal-gemfire). GemFire is an In-Memory Data Grid (IMDG).
 GemFire's two main components are a locator and cache server (a.k.a data node).
 The client connects to a locator to find its data.  
 
@@ -33,7 +33,7 @@ scaled up to handle increased data or clients.
 
 ### GemFire Regions
 
-Data is managed in a region. It is similar to a table in a traditional
+Data is managed in a [region](http://gemfire.docs.pivotal.io/93/geode/basic_config/data_regions/chapter_overview.html). It is similar to a table in a traditional
 relational database. Each region can have a different data policy. A replicated region data policy stores a copy of entries on each data node. Data is shared in a partition region
 data policy so that each data node only stores pieces of the primary values in entries and or a
 configured number of backup copies.
@@ -55,7 +55,7 @@ See the coding example below.
     }
 
 It supports SQL like
-queries through its object query language.  With QOL you can select objects by a particular
+queries through its Object Query Language (OQL).  With [QOL](http://gemfire.docs.pivotal.io/93/geode/developing/querying_basics/chapter_overview.html) you can select objects by a particular
 attribute in a where clause. It supports simple and complex queries (nested queries).
 
 For a "molecules" region, QOL would allow you to perform a search such as
@@ -83,7 +83,7 @@ See [https://12factor.net/](https://12factor.net/) for details.
 
 The cloud native applications are stateless. Any information that is cached or stateful is
 managed in a backing service. GemFire implementation of the caching backing service
-is called Pivotal Cloud Cache (PCC).
+is called [Pivotal Cloud Cache](https://docs.pivotal.io/p-cloud-cache/1-0/index.html) (PCC).
 
 PCC allows the user to quickly provision multiple environment instances of GemFire.
 An instance can be based on a desired plan that dictates the number of locators/data nodes and the size of the cache.
