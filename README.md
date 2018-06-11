@@ -14,10 +14,34 @@ User will be able to store molecule attributes in the cache.
 
 Molecule has attributes such as
 
-- *SMILES* a string representation of the molecule structure in a shortened form.
-- *Molfile* a verbose representation of the molecule also holds additional (not structure) information.
-- Formula - an expression of the molecule relationships or rules in symbols
-- Weight - a measure of the sum of the atomic heaviness
+- *SMILES* - calculated string representation of the molecule structure in a shortened form.
+- *Molfile* - calculated verbose representation of the molecule also holds additional (not structure) information.
+- Weight - calculated measure of the sum of the atomic heaviness
+- Formula - calculated expression of the molecule relationships or rules in symbols
+- Source - user entered associate the molecule for example a manufacture or scientist.
+- Name - user entered label for the molecule such as the related experiment or project
+
+The cache implementation is Pivotal GemFire. GemFire is an In Memory Data Grid (IMDG).
+It supports NO SQL operations to get object very quickly by a key. It support SQL like
+queries through it's object query language. With OQL you can select object by particular
+attribute in a where cause. It support simple and complex queries (nested queries).
+
+
+OQL allows you to perform search such as
+
+  select * from /molecules where smile = 'C'
+  select * from /molecules where formula = 'H20' or (weight > 18.0 and weight < 20)
+
+
+GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures) , full text searches and more. The GemFire use cause
+tend to be based on FAST data access patterns.
+
+
+The following demo implementation of this application is deployed on Pivotal implement of Cloud
+Foundry, named Pivotal Cloud Foundry. 
+
+
+
 
 
 
