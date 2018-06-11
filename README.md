@@ -31,10 +31,14 @@ All data is stored on the cache server. Cache servers/data node register with lo
 to be discovered by clients or other data nodes. The number of data node can be
 scaled up to handle increased data or clients.
 
+### GemFire Regions
+
 Data is managed in a region. It is similar to a table in a traditional
 relational database. Each region can have a different data policy. A replicated region data policy stores a copy of entries on each data node. Data is shared in a partition region
 data policy so that each data node only stores pieces of the primary values in entries and or a
 configured number of backup copies.
+
+### Data Access
 
 GemFire supports NO SQL operations to get region entry objects very quickly by a key. It supports SQL like
 queries through its object query language.  With QOL you can select objects by particular
@@ -47,6 +51,21 @@ For a "molecules" region, QOL allows you to perform a search such as
     select * from /molecules where formula = 'H20' or (weight > 18.0 and weight < 20)
 
 
+
+Region directly support noSQL operations. User can be a entry object directly from a region "get" operation
+by provider key identifier. See the coding example below.
+
+
+    @Resource
+    Region<String, Molecule> molecules;
+
+    Molecule findMolecule(String key)
+    {
+        return molecules.get(key)
+    }
+
+
+## Other Features
 
 GemFire supports other features such as events listeners (similar to database triggers), joins, transactions, functions (similar to stored procedures), full-text searches and more. The GemFire use case tends to be based on FAST data access patterns. See (https://pivotal.io/pivotal-gemfire)[https://pivotal.io/pivotal-gemfire] for more details on GemFire.
 
