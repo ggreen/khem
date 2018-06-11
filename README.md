@@ -77,7 +77,7 @@ GemFire supports other features such as events listeners (similar to database tr
 The demo implementation of this application is deployed on Pivotal implement of Cloud
 Foundry, named Pivotal Cloud Foundry. Cloud Foundry is an opinionated cloud-native
 platform that forces implement to maintain the 12-factor based principals.
-See (https://12factor.net/)[https://12factor.net/] for details.
+See [https://12factor.net/](https://12factor.net/) for details.
 
 ## Pivotal Cloud Cache (PCC)
 
