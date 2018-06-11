@@ -52,8 +52,9 @@ For a "molecules" region, QOL allows you to perform a search such as
 
 
 
-Region directly support noSQL operations. User can be a entry object directly from a region "get" operation
-by provider key identifier. See the coding example below.
+Regions are based on key/value pairs that support noSQL operations. Users can get a
+entry object directly from a region "get" operation by providing key identifier.
+See the coding example below.
 
 
     @Resource
