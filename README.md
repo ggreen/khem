@@ -20,10 +20,10 @@ A user can store molecule attributes in the cache. The molecule object has attri
 
 - *SMILES* - a calculated string representation of the molecule structure in a shortened form.
 - *Molfile* - a calculated verbose representation of the molecule that holds additional information.
-- Weight - a calculated measure of the sum of the atomic heaviness
-- Formula - a calculated expression of the molecule relationships or rules in symbols
-- Source - a user-entered field to associate the molecule, for example, a manufacturer or scientist.
-- Name - user-entered label for the molecule such as the related experiment or project
+- *Weight* - a calculated measure of the sum of the atomic heaviness
+- *Formula* - a calculated expression of the molecule relationships or rules in symbols
+- *Source* - a user-entered field to associate the molecule, for example, a manufacturer or scientist.
+- *Name* - user-entered label for the molecule such as the related experiment or project
 
 ## GemFire
 
@@ -45,13 +45,19 @@ configured number of backup copies.
 ### Data Access
 
 GemFire supports NO SQL operations to get region entry objects very quickly by a key.
-Regions are based on key/value pairs. Users can get a
-entry object directly from a region "get" operation by providing the key identifier.
+Regions are based on key/value pairs.
+
+    Region<String, Molecule> molecules
+
+Users can store entry in a region using a "put" operation.
+
+    molecules.put(key,molecule);
+
+
+Users can retrieve an entry object directly from a region "get" operation by providing the key identifier.
 See the coding example below.
 
 
-    @Resource
-    Region<String, Molecule> molecules;
 
     Molecule findMolecule(String key)
     {
