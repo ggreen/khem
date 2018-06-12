@@ -16,6 +16,8 @@ be populated using a web-based scientific molecule editor called JSDraw.
 
 A user can store molecule attributes in the cache. The molecule object has attributes such as:
 
+![molecule](https://github.com/ggreen/khem/blob/master/docs/molecule.png)
+
 - *SMILES* - a calculated string representation of the molecule structure in a shortened form.
 - *Molfile* - a calculated verbose representation of the molecule that holds additional information.
 - Weight - a calculated measure of the sum of the atomic heaviness
