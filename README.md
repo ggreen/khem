@@ -29,12 +29,10 @@ In this example, a user can store molecule attributes in the cache. The molecule
 
 The cache implementation is [Pivotal GemFire](https://pivotal.io/pivotal-gemfire). GemFire is an In-Memory Data Grid (IMDG).
 GemFire's two main components are a locator and cache server (a.k.a data node).
-The client connects to a locator to find its data.  
 
 ![IMDG](https://github.com/ggreen/khem/blob/master/docs/IMDG.png)
 
-
-All data is stored on the cache server. Cache servers/data nodes register with locators
+The client can connect to a locator to access its data. All data is stored on the cache server. Cache servers/data nodes register with locators
 to be discovered by clients or other data nodes.
 The knowledge of data nodes and where data is located is abstracted from the client. The number of data nodes can be
 scaled up to handle increased data or clients.
