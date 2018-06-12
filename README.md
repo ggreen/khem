@@ -31,8 +31,12 @@ The cache implementation is [Pivotal GemFire](https://pivotal.io/pivotal-gemfire
 GemFire's two main components are a locator and cache server (a.k.a data node).
 The client connects to a locator to find its data.  
 
+![IMDG](https://github.com/ggreen/khem/blob/master/docs/IMDG.png)
+
+
 All data is stored on the cache server. Cache servers/data nodes register with locators
-to be discovered by clients or other data nodes. The number of data nodes can be
+to be discovered by clients or other data nodes.
+The knowledge of data nodes and where data is located is abstracted from the client. The number of data nodes can be
 scaled up to handle increased data or clients.
 
 ### GemFire Regions
