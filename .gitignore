@@ -10,4 +10,5 @@ eMolecules/
 bin/
 gradle.properties
 *.log
+/~$khem-diagrams.pptx
 
