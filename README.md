@@ -8,7 +8,7 @@ This document outlines how application can store some objects in a cache.
 
 The [KHEM](https://khemapp.pcfbeta.io/) demo application is based on a pharma life-science based use case.
 It can allow users
-to build information knowledge managed in objects. The objects, in this case, are molecules. The molecule object attributes will
+to build information knowledge managed in objects. The objects, in this case, are molecules. The molecule's object visual structure and many of its attributes will
 be populated using a web-based scientific molecule editor called JSDraw.
 
 ![app](https://github.com/ggreen/khem/blob/master/docs/app.png )
@@ -38,7 +38,7 @@ scaled up to handle increased data or clients.
 ### GemFire Regions
 
 Data is managed in a [region](http://gemfire.docs.pivotal.io/93/geode/basic_config/data_regions/chapter_overview.html). It is similar to a table in a traditional
-relational database. Each region can have a different data policy. A replicated region data policy stores a copy of entries on each data node. Data is shared in a partition region
+relational database. Each region can have a different data policy. A replicated region data policy stores a copy of entries on each data node. Data is split in a partition region
 data policy so that each data node only stores pieces of the primary values in entries and or a
 configured number of backup copies.
 
