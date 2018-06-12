@@ -8,4 +8,6 @@ eMolecules/
 .gradle/
 .gradle/*
 bin/
+gradle.properties
+*.log
 
