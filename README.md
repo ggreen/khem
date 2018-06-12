@@ -57,12 +57,8 @@ Users can store entry in a region using a "put" operation.
 Users can retrieve an entry object directly from a region "get" operation by providing the key identifier.
 See the coding example below.
 
+    Molecule molecule = molecules.get(key)
 
-
-    Molecule findMolecule(String key)
-    {
-        return molecules.get(key)
-    }
 
 It supports SQL like
 queries through its Object Query Language (OQL).  With [QOL](http://gemfire.docs.pivotal.io/93/geode/developing/querying_basics/chapter_overview.html) you can select objects by a particular
