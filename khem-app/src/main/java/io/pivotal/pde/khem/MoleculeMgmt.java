@@ -1,5 +1,6 @@
 package io.pivotal.pde.khem;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import io.pivotal.pde.khem.data.KHEMCriteria;
 import io.pivotal.pde.khem.data.MaterialCriteria;
 import io.pivotal.pde.khem.data.MaterialCriteria.MaterialCriteriaType;
+import joelib2.io.MoleculeIOException;
 import io.pivotal.pde.khem.data.Molecule;
+import khem.solutions.cheminformatics.joelib.JOELib;
 
 /**
  * Handles data access for molecule information
@@ -46,6 +49,18 @@ public class MoleculeMgmt implements MoleculeService
 		if (molString == null || molString.length() == 0)
 			throw new IllegalArgumentException("molString is required");
 		
+		//calcute weight
+	 try
+	 {
+		 joelib2.molecule.Molecule joeMol = JOELib.toMolecule(molString);
+		 double weight = Math.round(JOELib.toWeight(joeMol)*100)/100D;
+		 molecule.setWeight(Double.valueOf(weight));
+			
+	 }
+	 catch(MoleculeIOException | IOException e)
+	 {
+		 e.printStackTrace();
+	 }
 		
 		String id = generateId(sourceCode,name);
 		this.moleculesRegion.put(id,molecule);
@@ -53,7 +68,7 @@ public class MoleculeMgmt implements MoleculeService
 		return molecule;
 	}//------------------------------------------------
 	/**
-	 * Find by variaous criteria
+	 * Find by various criteria
 	 * @param criteria the search criteria
 	 * @return the molecule results
 	 */

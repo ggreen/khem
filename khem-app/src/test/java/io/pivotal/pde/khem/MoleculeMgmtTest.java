@@ -11,6 +11,7 @@ import java.util.Collection;
 import io.pivotal.pde.khem.data.KHEMCriteria;
 import io.pivotal.pde.khem.data.MaterialCriteria;
 import io.pivotal.pde.khem.data.Molecule;
+import nyla.solutions.core.io.IO;
 import io.pivotal.pde.khem.data.MaterialCriteria.MaterialCriteriaType;
 
 public class MoleculeMgmtTest
@@ -28,6 +29,7 @@ public class MoleculeMgmtTest
 	}//------------------------------------------------
 	@Test
 	public void testSaveMolecule()
+	throws Exception
 	{
 		assertNull(mgmt.saveMolecule(null));
 		
@@ -43,7 +45,8 @@ public class MoleculeMgmtTest
 		molecule.setCanonicalSMILES("C");
 		try {mgmt.saveMolecule(molecule); fail(); } catch(Exception e) {}
 		
-		molecule.setMolString("MOLE");
+		String molfile = IO.readFile("src/test/resources/sdf/acenaphthylene.mol");
+		molecule.setMolString(molfile);
 		
 		assertEquals(mgmt.saveMolecule(molecule),molecule);
 	}//------------------------------------------------

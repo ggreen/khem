@@ -64,6 +64,16 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind:2.9.2'
     compile 'com.fasterxml.jackson.core:jackson-annotations:2.9.2'
      compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+     compile 'com.github.nyla-solutions:khem-core:0.0.1-SNAPSHOT'
+     //compile group: 'com.lowagie', name: 'itext', version: '4.2.0'
+	compile group: 'com.lowagie', name: 'itext', version: '0.99'
+     compile group: 'com.github.nyla-solutions', name: 'khem-joelib', version: '0.0.1-SNAPSHOT'
+ 
+    //compile 'org.mongodb:mongo-java-driver:2.10.1'
+  	compile group: 'com.conversantmedia', name: 'disruptor', version: '1.2.11'
+  	compile group: 'com.lmax', name: 'disruptor', version: '3.3.7'
+  
+     
     compile 'log4j:log4j:1.2.17'
 	     
 	compile group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.1.1'

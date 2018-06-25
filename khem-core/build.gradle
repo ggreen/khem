@@ -1,0 +1,105 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+sourceCompatibility = 1.8
+version = '0.0.1-SNAPSHOT'
+group = 'com.github.nyla-solutions'
+archivesBaseName = 'khem-core'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Quickstart', 'Implementation-Version': version
+    }
+}
+
+repositories {
+ 
+    maven {
+        url "https://commercial-repo.pivotal.io/data3/gemfire-release-repo/gemfire"
+    }
+    
+    maven {
+        url 'https://repo.spring.io/libs-milestone'
+    }
+    
+    mavenLocal()
+    
+    mavenCentral()
+
+    //flatDir {
+    //    dirs '/devtools/chemistry/JOELib2-alpha-20090613/lib'   
+    	//}
+        
+   //flatDir dirs: ["/Projects/solutions/Library/repos"]
+    
+}
+
+dependencies {
+
+	compile 'io.pivotal.gemfire:geode-core:9.2.0'
+	compile 'io.pivotal.gemfire:geode-wan:9.2.0'
+	compile 'io.pivotal.gemfire:geode-cq:9.2.0'
+	compile group: 'com.github.nyla-solutions', name: 'gedi-geode-extensions-core', version: '1.1.4-SNAPSHOT'
+	compile group: 'org.apache.commons', name: 'commons-csv', version: '1.5'
+	
+	// compile 'org.springframework.data:spring-data-gemfire:2.0.0.M4'
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'
+    compile 'org.codehaus.jackson:jackson-mapper-asl:1.9.13'
+    //compile 'org.springframework.data:spring-data-gemfire:1.5.2.RELEASE'
+    compile 'org.freemarker:freemarker:2.3.21'
+    compile 'javax.mail:javax.mail-api:1.5.2'
+    compile 'com.google.code.gson:gson:2.3.1'
+    compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.2'
+    compile group:  'commons-net', name: 'commons-net', version: '3.3'
+    compile 'org.freemarker:freemarker:2.3.21'
+    compile 'javax.mail:javax.mail-api:1.5.2'
+  	compile 'javax.jms:javax.jms-api:2.0'
+    compile group: 'com.lowagie', name: 'itext', version: '4.2.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.5.1'
+    compile 'xom:xom:1.2.5'
+    compile 'log4j:log4j:1.2.17'
+	compile 'org.mongodb:mongo-java-driver:2.10.1'
+	     
+	compile group: 'com.github.nyla-solutions', name: 'nyla.solutions.core', version: '1.1.4-SNAPSHOT'
+    compile group: 'com.github.nyla-solutions', name: 'nyla.solutions.dao', version: '0.0.1'
+    compile group: 'com.github.nyla-solutions', name: 'nyla.solutions.commas', version: '0.1'
+    
+    compile group: 'com.github.nyla-solutions', name: 'khem-joelib', version: '0.0.1-SNAPSHOT'
+ 
+    compile 'org.mongodb:mongo-java-driver:2.10.1'
+  	compile group: 'com.conversantmedia', name: 'disruptor', version: '1.2.11'
+  	compile group: 'com.lmax', name: 'disruptor', version: '3.3.7'
+  
+  	testCompile group: 'org.mockito', name: 'mockito-core', version: '2.13.0'
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+    
+	testCompile group: 'org.gradle', name: 'gradle-base-services', version: '3.4.1'
+    
+ 
+        	
+}
+
+test {
+    systemProperties 'config.properties': 'src/test/resources/khem.junit.config.properties'
+}
+
+uploadArchives {
+    repositories {
+       flatDir {
+           dirs '/Projects/solutions/Library/repos'
+       }
+    }
+}
+
+configurations.all {
+ resolutionStrategy {
+  force "org.reflections:reflections:0.9.5"
+ }
+ }
+
+task copyJars(type: Copy) {
+	  from configurations.runtime
+	  into 'lib'
+	}
+
