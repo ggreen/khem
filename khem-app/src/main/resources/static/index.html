@@ -45,21 +45,25 @@ M  END
 			
 			//Viewer
 			var viewPanelElem = document.getElementById('viewPanel');
-			var chemViewerEdior = new Kekule.Editor.ChemSpaceEditor(document, null, Kekule.Render.RendererType.R2D);
-			chemViewer = new Kekule.Editor.Composer(viewPanelElem, chemViewerEdior);
+			chemViewer = new Kekule.ChemWidget.Viewer(viewPanelElem);
+			chemViewer.setDimension('230px', '230px');
+			//viewPanel
+			
+			//chemViewer.appendToElem(viewPanelElem);
+			//.setChemObj(molecule);
+			
 			// Set displayed buttons in common and zoom toolbar
 			//chemViewer.setCommonToolButtons(['newDoc', 'loadData', 'saveData', 'zoomIn', 'zoomOut']);
-			chemViewer.setCommonToolButtons([]);
+		
 
 			// Set displayed buttons in chem toolbar
 			//chemViewer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atom', 'ring', 'charge']);
-			chemViewer.setChemToolButtons([]);
+		
 
 			// Set displayed components in style toolbar
 			//chemViewer.setStyleToolComponentNames(['color', 'textDirection', 'textAlign']);
-			chemViewer.setStyleToolComponentNames([]);
+
 			// hide style toolbar totally
-			chemViewer.setEnableStyleToolbar(false);
 			
 			
 			// resource is referred by url(#id), similar to CSS URI
@@ -259,9 +263,11 @@ M  END
 <!-- ============================== -->
 <!--  Molecule viewer -->
 <!-- border:1px solid gray -->
-<div  style="z-index:10; position: fixed;left:660px; top:143px;width: 330px; height: 330px;">
- <div id="viewPanel"></div>
+<div  style="z-index:10; position: fixed;left:670px; top:184px;width: 230px; height: 230px; border:1px solid gray" viewonly popup dataformat='molfile' data=''>
+	<div id="viewPanel"></div> 
 </div>
+
+
 <!-- ============================== -->
 <p><button onclick="saveMolecule();">&nbsp;Save&nbsp;</button></p>
 <!-- ============================== -->
