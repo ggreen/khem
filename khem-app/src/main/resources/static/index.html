@@ -42,10 +42,13 @@ M  END
 			var chemEditor = new Kekule.Editor.ChemSpaceEditor(document, null, Kekule.Render.RendererType.R2D);
 			chemComposer = new Kekule.Editor.Composer(composerElem, chemEditor);
 			chemComposer.setCommonToolButtons([]);
+			//See http://partridgejiang.github.io/Kekule.js/documents/tutorial/content/composer.html#creating-composer
+			chemComposer.setChemToolButtons(['manipulate', 'erase', 'ring','textBlock', 'atom', 'formula', 'glyph' ,'bond']);
 			
 			//Viewer
 			var viewPanelElem = document.getElementById('viewPanel');
 			chemViewer = new Kekule.ChemWidget.Viewer(viewPanelElem);
+			//chemViewer.setRenderType(Kekule.Render.rendererType.R3D);
 			chemViewer.setDimension('230px', '230px');
 			//viewPanel
 			
@@ -218,12 +221,28 @@ M  END
 		function copyViewerToEditor()
 		{
 			 //JSDraw.get("test").setHtml(JSDraw.get("viewPanel").getHtml());
-			 chemComposer.setChemObj(chemViewer.getChemObj());
 			 
+			 var viewMol = chemViewer.getChemObj();
+		     if(viewMol === undefined)
+		     {
+		    	 var redText = "Please selected a molecule first in the search results";
+		    	 
+		    	 document.getElementById("copyViewerWarningPanel").innerHTML = redText;
+		        return false;	 
+		      }
+		     else
+		     {
+		    	 document.getElementById("copyViewerWarningPanel").innerHTML = "";
+		     }
+		     
 			 document.getElementById("source").value = moleculeArray[currentSelectedRow].sourceCode;
 		     document.getElementById("moleculeName").value = moleculeArray[currentSelectedRow].name;
 		     document.getElementById("mw").innerHTML = moleculeArray[currentSelectedRow].weight;
 		     document.getElementById("formula").innerHTML = moleculeArray[currentSelectedRow].formula;
+		     
+
+		     chemComposer.setChemObj(viewMol);
+		     
 		}
      </script>
   </head>
@@ -265,6 +284,9 @@ M  END
 <!-- border:1px solid gray -->
 <div  style="z-index:10; position: fixed;left:670px; top:184px;width: 230px; height: 230px; border:1px solid gray" viewonly popup dataformat='molfile' data=''>
 	<div id="viewPanel"></div> 
+	<button onclick='copyViewerToEditor()'>&lt;&lt;</button>
+	<br>
+	<div id="copyViewerWarningPanel" style="color:red"></div>
 </div>
 
 
@@ -272,8 +294,6 @@ M  END
 <p><button onclick="saveMolecule();">&nbsp;Save&nbsp;</button></p>
 <!-- ============================== -->
 
-<button onclick='copyViewerToEditor()'>Copy Viewer to Editor</button>
-<!-- <button onclick='JSDraw.get("test").sss(JSDraw.get("viewPanel"))'>View Substructure</button> -->
 <br />
 
 <p>
@@ -367,6 +387,7 @@ Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula:
 		{
 			  showRequired("");
 			  showError("");
+			  document.getElementById("copyViewerWarningPanel").innerHTML = "";
 		}//----------------------------------------------------------
 		/**
 		 * Save the molecule

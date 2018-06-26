@@ -33,7 +33,7 @@ import nyla.solutions.global.io.IO;
 
 //@RunWith(SpringJUnit4ClassRunner.class)
 //@ContextConfiguration(locations = {"classpath*:/META-INF/client/khem-spring-client-cache.xml"})
-//@Ignore
+@Ignore
 public class CommasCompoundMgmtTest
 {
 	

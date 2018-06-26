@@ -14,6 +14,7 @@ import io.pivotal.pde.khem.data.MaterialCriteria.MaterialCriteriaType;
 import joelib2.io.MoleculeIOException;
 import io.pivotal.pde.khem.data.Molecule;
 import khem.solutions.cheminformatics.joelib.JOELib;
+import nyla.solutions.core.exception.SystemException;
 
 /**
  * Handles data access for molecule information
@@ -52,9 +53,8 @@ public class MoleculeMgmt implements MoleculeService
 		//calcute weight
 	 try
 	 {
-		 joelib2.molecule.Molecule joeMol = JOELib.toMolecule(molString);
-		 double weight = Math.round(JOELib.toWeight(joeMol)*100)/100D;
-		 molecule.setWeight(Double.valueOf(weight));
+		 Double weight = toMolWeight(molString);
+		 molecule.setWeight(weight);
 			
 	 }
 	 catch(MoleculeIOException | IOException e)
@@ -67,6 +67,15 @@ public class MoleculeMgmt implements MoleculeService
 		
 		return molecule;
 	}//------------------------------------------------
+	private Double toMolWeight(String molString) throws IOException, MoleculeIOException
+	{
+		if(molString == null || molString.length() == 0)
+			return null;
+			
+		joelib2.molecule.Molecule joeMol = JOELib.toMolecule(molString);
+		 double weight = Math.round(JOELib.toWeight(joeMol)*100)/100D;
+		return Double.valueOf(weight);
+	}
 	/**
 	 * Find by various criteria
 	 * @param criteria the search criteria
@@ -88,45 +97,55 @@ public class MoleculeMgmt implements MoleculeService
 			throw new IllegalArgumentException("materialCriteriaType is required");
 		
 		Collection<Molecule> moles = null;
-		switch(materialCriteriaType)
+		try
 		{
-		  case BySMILES: moles = querierService.query("select * from /molecules where canonicalSMILES = '"+structureCriteria.getSmiles()+"'");
-			break;
-	
-		  case BySourceAndName: 
-			  String source = structureCriteria.getSource();
-			  if (source == null || source.length() == 0)
-				throw new IllegalArgumentException("source is required");
-			  
-			  String name = structureCriteria.getName();
-			  if (name == null || name.length() == 0)
-				throw new IllegalArgumentException("name is required");
-			  
-			  Molecule molecule = this.moleculesRegion.get(generateId(source, name));
-			  if(molecule == null)
-				  return null;
-			  
-			  moles = Collections.singleton(molecule);
-	
-			  break;
-		  case ByWEIGHT:
-			  Double weight = structureCriteria.getWeight();
-			  
-			  if (weight == null)
-				throw new IllegalArgumentException("weight is required");
-			  
-			  moles = this.querierService.query("select * from /molecules where weight = "+weight);
-			break;
-		  case ByFORMULA:
-			  String formula = structureCriteria.getFormula();
-			  if (formula == null || formula.length() == 0)
-				throw new IllegalArgumentException("formula is required");
-			  
-			  moles = this.querierService.query("select * from /molecules where formula = '"+formula+"'");
-	       break;
-	       
-		  default: throw new IllegalArgumentException("Unsupported search type:"+materialCriteriaType);
+			switch(materialCriteriaType)
+			{
+			  case BySMILES: moles = querierService.query("select * from /molecules where canonicalSMILES = '"+structureCriteria.getSmiles()+"'");
+				break;
+
+			  case BySourceAndName: 
+				  String source = structureCriteria.getSource();
+				  if (source == null || source.length() == 0)
+					throw new IllegalArgumentException("source is required");
+				  
+				  String name = structureCriteria.getName();
+				  if (name == null || name.length() == 0)
+					throw new IllegalArgumentException("name is required");
+				  
+				  Molecule molecule = this.moleculesRegion.get(generateId(source, name));
+				  if(molecule == null)
+					  return null;
+				  
+				  moles = Collections.singleton(molecule);
+
+				  break;
+			  case ByWEIGHT:
+				  Double weight = structureCriteria.getWeight();
+				  
+				  if (weight == null || Double.valueOf(-1).equals(weight))
+					  weight = toMolWeight(structureCriteria.getMolString());
+
+				  moles = this.querierService.query("select * from /molecules where weight = "+weight);
+				break;
+			  case ByFORMULA:
+				  String formula = structureCriteria.getFormula();
+				  if (formula == null || formula.length() == 0)
+					throw new IllegalArgumentException("formula is required");
+				  
+				  moles = this.querierService.query("select * from /molecules where formula = '"+formula+"'");
+			   break;
+			   
+			  default: throw new IllegalArgumentException("Unsupported search type:"+materialCriteriaType);
+			}
 		}
+		catch (MoleculeIOException | IOException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new SystemException(e);
+		}
+		
 		
 		return moles;
 	}//------------------------------------------------

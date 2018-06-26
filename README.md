@@ -116,3 +116,15 @@ The idea of this demo application is to allow scientist to determine similar mol
 on SMILES, formulas, weights and etc.
 
 - [khem-app](https://github.com/ggreen/khem/tree/master/khem-app)
+
+
+# Building
+
+Use Gradle to build the libraries
+
+	cd khem-joelib
+	gradle clean install
+	cd ../khem-core
+	gradle clean install
+	cd ../khem-app
+	gradle clean install
