@@ -13,5 +13,11 @@ public interface MoleculeService
 	Molecule saveMolecule(@Valid Molecule molecule);
 
 	Collection<Molecule> findMolecules(@Valid KHEMCriteria criteria);
+	
+	/**
+	 * Delete the molecule
+	 * @param molecule the molecule to delete
+	 */
+	void deleteMolecule(Molecule molecule);
 
 }

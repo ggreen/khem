@@ -129,7 +129,7 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 
 
 
-	/**
+	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -137,22 +137,19 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((canonicalSMILES == null) ? 0 : canonicalSMILES.hashCode());
+		result = prime * result + ((canonicalSMILES == null) ? 0 : canonicalSMILES.hashCode());
 		result = prime * result + ((formula == null) ? 0 : formula.hashCode());
 		result = prime * result + ((molKey == null) ? 0 : molKey.hashCode());
-		result = prime * result
-				+ ((molString == null) ? 0 : molString.hashCode());
+		result = prime * result + ((molString == null) ? 0 : molString.hashCode());
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((sourceCode == null) ? 0 : sourceCode.hashCode());
-		result = prime * result
-				+ ((structureKey == null) ? 0 : structureKey.hashCode());
+		result = prime * result + ((notes == null) ? 0 : notes.hashCode());
+		result = prime * result + ((sourceCode == null) ? 0 : sourceCode.hashCode());
+		result = prime * result + ((structureKey == null) ? 0 : structureKey.hashCode());
 		result = prime * result + ((weight == null) ? 0 : weight.hashCode());
 		return result;
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -199,6 +196,13 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 				return false;
 		}
 		else if (!name.equals(other.name))
+			return false;
+		if (notes == null)
+		{
+			if (other.notes != null)
+				return false;
+		}
+		else if (!notes.equals(other.notes))
 			return false;
 		if (sourceCode == null)
 		{
@@ -258,16 +262,18 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 		this.structureKey = structureKey;
 	}
 
-	/**
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString()
 	{
-		return "Molecule [name=" + name + ", molKey=" + molKey + ", weight="
-				+ weight + ", formula=" + formula + ", molString=" + molString
-				+ ", structureKey=" + structureKey + ", sourceCode="
-				+ sourceCode + ", canonicalSMILES=" + canonicalSMILES + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("Molecule [name=").append(name).append(", molKey=").append(molKey).append(", weight=")
+		.append(weight).append(", formula=").append(formula).append(", molString=").append(molString)
+		.append(", structureKey=").append(structureKey).append(", sourceCode=").append(sourceCode)
+		.append(", canonicalSMILES=").append(canonicalSMILES).append(", notes=").append(notes).append("]");
+		return builder.toString();
 	}
 	
 	
@@ -308,6 +314,24 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 
 
 	/**
+	 * @return the notes
+	 */
+	public String getNotes()
+	{
+		return notes;
+	}
+
+	/**
+	 * @param notes the notes to set
+	 */
+	public void setNotes(String notes)
+	{
+		this.notes = notes;
+	}
+
+
+
+	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 5791503838849751260L;
@@ -319,5 +343,6 @@ public class Molecule implements Serializable, Comparable<Molecule>, Nameable, I
 	private String structureKey;
 	private String sourceCode;
 	private String canonicalSMILES;
+	private String notes;
 
 }

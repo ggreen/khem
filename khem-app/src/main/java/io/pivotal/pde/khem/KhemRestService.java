@@ -61,6 +61,16 @@ public class KhemRestService
 		
 	}//------------------------------------------------
 	
+	@PostMapping(path="/deleteMolecule",consumes = {"application/json;charset=UTF-8"},
+	 produces = "application/json")
+	public Molecule deleteMolecule(@Valid @RequestBody Molecule molecule)
+	{
+		System.out.println("molecule:"+molecule);
+		
+		 moleculeService.deleteMolecule(molecule);
+		 return molecule;
+	}//------------------------------------------------
+	
 	@Autowired MoleculeService moleculeService;
 
 }

@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" >
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+	xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
-  <title>KHEM</title>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-   <link type="text/css" rel="stylesheet" href="common/css/site.css"/>
-   <link rel="stylesheet" type="text/css" href="themes/default/kekule.css" />
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>
+<title>KHEM</title>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link type="text/css" rel="stylesheet" href="common/css/site.css" />
+<link rel="stylesheet" type="text/css" href="themes/default/kekule.css" />
+<script type="text/javascript"
+	src="https://ajax.googleapis.com/ajax/libs/dojo/1.11.2/dojo/dojo.js"></script>
 
-  <script src="kekule.js?module=io,chemWidget,algorithm"></script>
-  <script id="benzeneMolElement" type="chemical/x-mdl-molfile">
+<script src="kekule.js?module=io,chemWidget,algorithm"></script>
+<script id="benzeneMolElement" type="chemical/x-mdl-molfile">
   
   Marvin  10310613082D          
 
@@ -28,431 +30,478 @@
   5  6  2  0  0  0  0
 M  END
 </script>
-	
-	
+
+
 <script>
-		var chemEditor;
-		var chemComposer;
-		var chemViewer;
-		
-		function init()
-		{
-			//Editor
-			var composerElem = document.getElementById('chemComposer');
-			var chemEditor = new Kekule.Editor.ChemSpaceEditor(document, null, Kekule.Render.RendererType.R2D);
-			chemComposer = new Kekule.Editor.Composer(composerElem, chemEditor);
-			chemComposer.setCommonToolButtons([]);
-			//See http://partridgejiang.github.io/Kekule.js/documents/tutorial/content/composer.html#creating-composer
-			chemComposer.setChemToolButtons(['manipulate', 'erase', 'ring','textBlock', 'atom', 'formula', 'glyph' ,'bond']);
-			
-			//Viewer
-			var viewPanelElem = document.getElementById('viewPanel');
-			chemViewer = new Kekule.ChemWidget.Viewer(viewPanelElem);
-			//chemViewer.setRenderType(Kekule.Render.rendererType.R3D);
-			chemViewer.setDimension('230px', '230px');
-			//viewPanel
-			
-			//chemViewer.appendToElem(viewPanelElem);
-			//.setChemObj(molecule);
-			
-			// Set displayed buttons in common and zoom toolbar
-			//chemViewer.setCommonToolButtons(['newDoc', 'loadData', 'saveData', 'zoomIn', 'zoomOut']);
-		
-
-			// Set displayed buttons in chem toolbar
-			//chemViewer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atom', 'ring', 'charge']);
-		
-
-			// Set displayed components in style toolbar
-			//chemViewer.setStyleToolComponentNames(['color', 'textDirection', 'textAlign']);
-
-			// hide style toolbar totally
-			
-			
-			// resource is referred by url(#id), similar to CSS URI
-			var resId = 'url(#benzeneMolElement)';
-			Kekule.IO.loadResourceData(resId, function(mol, success)
-			{
-			  if (success)
-			  {
-			    console.log('Loading from ' + resId + ' Successful');
-			    chemComposer.setChemObj(mol);
-			  }
-			  else
-			  {
-			    console.log('Loading from ' + resId + ' Failed');
-			  }
-			});
-			
-			
-			// adjust size
-			//adjustSize();
-
-			//window.onresize = adjustSize;
-		}
-		function adjustSize()
-		{
-			var dim = Kekule.HtmlElementUtils.getViewportDimension(document);
-			chemComposer.setWidth(dim.width - 50 + 'px').setHeight(dim.height - 30 + 'px');
-		}
-
-		Kekule.X.domReady(init);
-	</script>
+	var chemEditor;
+	var chemComposer;
+	var chemViewer;
 	
-     <script type="text/javascript">
-     function findMolecules()
-		{
-			clear();
-			var searchCriteria = getSearchCriteria();
-			
-			if(searchCriteria == null)
-			{
-				showError("Select criteria (ex: By SMILES)");
-				return false;
+	function getCurrMol()
+	{
+		return chemEditor.getChemSpace().getChildAt(0);
+	}
+
+	function init() {
+		//Editor
+		var composerElem = document.getElementById('chemComposer');
+		chemEditor = new Kekule.Editor.ChemSpaceEditor(document, null,
+				Kekule.Render.RendererType.R2D);
+		chemComposer = new Kekule.Editor.Composer(composerElem, chemEditor);
+		chemComposer.setCommonToolButtons([]);
+		//See http://partridgejiang.github.io/Kekule.js/documents/tutorial/content/composer.html#creating-composer
+		//'formula', 'glyph', 'bond', 'textBlock',
+		chemComposer.setChemToolButtons([ 'manipulate', 'erase', 'ring', 'atom']);
+		
+		//Viewer
+		var viewPanelElem = document.getElementById('viewPanel');
+		chemViewer = new Kekule.ChemWidget.Viewer(viewPanelElem);
+		//chemViewer.setRenderType(Kekule.Render.rendererType.R3D);
+		chemViewer.setDimension('230px', '230px');
+		//viewPanel
+
+		//chemViewer.appendToElem(viewPanelElem);
+		//.setChemObj(molecule);
+
+		// Set displayed buttons in common and zoom toolbar
+		//chemViewer.setCommonToolButtons(['newDoc', 'loadData', 'saveData', 'zoomIn', 'zoomOut']);
+
+		// Set displayed buttons in chem toolbar
+		//chemViewer.setChemToolButtons(['manipulate', 'erase', 'bond', 'atom', 'ring', 'charge']);
+
+		// Set displayed components in style toolbar
+		//chemViewer.setStyleToolComponentNames(['color', 'textDirection', 'textAlign']);
+
+		// hide style toolbar totally
+
+		// resource is referred by url(#id), similar to CSS URI
+		var resId = 'url(#benzeneMolElement)';
+		Kekule.IO.loadResourceData(resId, function(mol, success) {
+			if (success) {
+				console.log('Loading from ' + resId + ' Successful');
+				chemComposer.setChemObj(mol);
+			} else {
+				console.log('Loading from ' + resId + ' Failed');
 			}
-			
-			 var mol = chemComposer.getChemObj();
-			 var firstMolecule = chemComposer.exportObjs(Kekule.Molecule)[0];
-			 //composer.exportObjs(Kekule.Molecule)[0];
-			 var formula  = firstMolecule.calcFormula().getText();
-			  var molStringFile =  Kekule.IO.saveFormatData(mol, 'mol');
-			  var smiles = Kekule.IO.saveFormatData(mol, 'smi');
-			  
-		      var weight = -1;
-		      //mol.getMolWeight();
-		      var source = document.getElementById("source").value;
-		      var name = document.getElementById("moleculeName").value;
-		      
-			  if(searchCriteria == "BySourceAndName")
-			  {
-				  if(source == null || source.length == 0)
-				  {
-					  return showRequired("Source");
-				  }
-				  
-				  if(name == null || name.length == 0)
-				  {
-					  return showRequired("Name");
-				  }
-			  }
-		      else if(smiles == null || smiles.length == 0)
-			  {
-			      return showRequired("Drawn valid molecule in editor. For example, try benzene.");
-			  }
-						
-			document.getElementById("moleculesPanel").innerHTML = "<img src='common/images/progress.gif'/>";
-			currentSelectedRow = 0;
-			
-			var xhttp = new XMLHttpRequest();
-			  xhttp.open("POST", "findMolecules",  true);
-			  xhttp.setRequestHeader("Content-Type", "application/json");
-			  
-			  var khemCriteria = {
-					  "structureCriteria" : {
-						  "molString" : molStringFile,
-						  "weight" : weight,
-						  "formula" : formula,
-						  "searchType": searchCriteria,
-						  "smiles" : smiles,
-			  			  "source": source,
-			  			  "name": name
-						  }
-			  };
-			  
-			  var json = JSON.stringify(khemCriteria);
-			  
-			  //Response handler
-			   xhttp.onreadystatechange = function() {
-			        if (this.readyState == 4 && this.status == 200) 
-			        {
-			        	//Handle not records found
-			        	if(this.responseText == null || this.responseText.length == 0)
-			        	{
-			        		document.getElementById("moleculesPanel").innerHTML = "No data found";
-			        		return;
-			        	}
-			        	
-			        	parent.moleculeArray =  JSON.parse(this.responseText);
-			        	var tableHtml = "";
-			        	
-			        	var rowClass = "odd";
-			        	
-			        	//loop thru molecules
-			        	for (i = 0; i < parent.moleculeArray.length; i++) {
-			        		
-			        		if(i % 2 == 0)
-			        			rowClass =  "even";
-			        		else
-			        			rowClass =  "odd";
-			        		
-			        		tableHtml += "<tr class="+rowClass+" id=moleRow"+i+" onclick='viewMolecule("+i+")'>"+
-			        			    "<td>"+parent.moleculeArray[i].sourceCode+"</td>"+
-			        			    "<td>"+parent.moleculeArray[i].name+"</td>"+
-			        				"<td>"+parent.moleculeArray[i].formula+"</td>"+
-			        				"<td>"+parent.moleculeArray[i].weight+"</td>"
-			        				;
-			        		
-			        		//add mol file
-			        		tableHtml += "</tr>";
-			        	}
-			        	 
-			        	tableHtml = "<table class=\"resultTable\">"+
-			        	"<thead><tr><th>source</th><th>name</th><th>formula</th><th>weight</th></tr></thread>"+
-				        	"<tbody>"+
-				        		tableHtml+
-				        	"</tbody>"+
-			        	"</table>";
-			        	
-			         document.getElementById("moleculesPanel").innerHTML =tableHtml;
+		});
 
-			       }//end of if
-			       else if (this.readyState == 4 && this.status != 200) 
-			       { 
-			    	   //display error
-			    	   var errorText  = "<div style='color:red'>"+this.responseText+"</div>";
-			    	   document.getElementById("moleculesPanel").innerHTML = errorText;
-			       }
-			  };
-			  
-			  xhttp.send(json);
-			
-			return 0;
-		}//----------------------------------------------------------
-		function copyViewerToEditor()
-		{
-			 //JSDraw.get("test").setHtml(JSDraw.get("viewPanel").getHtml());
-			 
-			 var viewMol = chemViewer.getChemObj();
-		     if(viewMol === undefined)
-		     {
-		    	 var redText = "Please selected a molecule first in the search results";
-		    	 
-		    	 document.getElementById("copyViewerWarningPanel").innerHTML = redText;
-		        return false;	 
-		      }
-		     else
-		     {
-		    	 document.getElementById("copyViewerWarningPanel").innerHTML = "";
-		     }
-		     
-			 document.getElementById("source").value = moleculeArray[currentSelectedRow].sourceCode;
-		     document.getElementById("moleculeName").value = moleculeArray[currentSelectedRow].name;
-		     document.getElementById("mw").innerHTML = moleculeArray[currentSelectedRow].weight;
-		     document.getElementById("formula").innerHTML = moleculeArray[currentSelectedRow].formula;
-		     
+		// adjust size
+		//adjustSize();
 
-		     chemComposer.setChemObj(viewMol);
-		     
-		}
-     </script>
-  </head>
-<body onload="init()">
+		//window.onresize = adjustSize;
+	}
+	function adjustSize() {
+		var dim = Kekule.HtmlElementUtils.getViewportDimension(document);
+		chemComposer.setWidth(dim.width - 50 + 'px').setHeight(
+				dim.height - 30 + 'px');
+	}
 
-<!-- LOGO -->
-<img src="common/images/pivotal.png"/> <img src="common/images/logo.png"/>
-<br/>
-<br/>
-<div>
-<form name="searchCriterForm" onsubmit="return false;">
-  <input type="radio" name="how" value="BySMILES" checked="checked"> By SMILE 
-  <input type="radio" name="how" value="ByWEIGHT"> By Weight
-  <input type="radio" name="how" value="ByFORMULA"> By Formula
-  <input type="radio" name="how" value="BySourceAndName"> By Source and Name 
-  <button onclick="findMolecules()">Find</button>
-</form>
-<br/>
-<!--  -->
-<table>
-	<tr>
-		<td>Source:</td><td><input id="source" type="text" name="source"></input></td>
-		<td>&nbsp;</td>
-		<td>Name:</td><td><input id="moleculeName" type="text" name="moleculeName"></input></td>
-	</tr>
-	<tr>
-		<td colspan="5"><div id="requiredPanel"></div></td>
-	</tr>
-</table>
-
-<div>
-<!-- data-chem-obj="url(#chemDoc1)" -->
-	<div id="chemComposer" style="width:650px;height:400px" ></div>
-</div>
-
-
-<!-- ============================== -->
-<!--  Molecule viewer -->
-<!-- border:1px solid gray -->
-<div  style="z-index:10; position: fixed;left:670px; top:184px;width: 230px; height: 230px; border:1px solid gray" viewonly popup dataformat='molfile' data=''>
-	<div id="viewPanel"></div> 
-	<button onclick='copyViewerToEditor()'>&lt;&lt;</button>
-	<br>
-	<div id="copyViewerWarningPanel" style="color:red"></div>
-</div>
-
-
-<!-- ============================== -->
-<p><button onclick="saveMolecule();">&nbsp;Save&nbsp;</button></p>
-<!-- ============================== -->
-
-<br />
-
-<p>
-Mol. Weight: <span id='mw' style='width:120px;font-weight:bold'></span> Formula: <span id='formula' style='width:300px;font-weight:bold'></span>
-</p>
-<script type="text/javascript">
-    
-    function getSearchCriteria (radios)
-    {
-    	var howRadios = document.forms["searchCriterForm"]["how"];
-    	
-        for (i = 0; i < howRadios.length; ++ i)
-        {
-            if(howRadios [i].checked)
-            	return howRadios [i].value;
-        }
-        return null;
-    }
-    
+	Kekule.X.domReady(init);
 </script>
 
-</div>
-
-<br/>
-<div id="moleculesPanel">
-
-</div>
-
 <script type="text/javascript">
-    
-	var moleculeArray = [{}];
-	var currentSelectedRow = 0;
+	function findMolecules() {
+		clear();
+		var searchCriteria = getSearchCriteria();
 
-    function viewMolecule(i)
-    {
-    		//alert(moleculeArray[i].molString);
-    		var previousRow = document.getElementById('moleRow'+currentSelectedRow);
-    		
-    		if(currentSelectedRow % 2 == 1)
-    			previousRow.className = 'odd';
-    		else
-    			previousRow.className = 'even';
-    			
-    		var row = document.getElementById('moleRow'+i);
-    		
-    		row.className = "select";
+		if (searchCriteria == null) {
+			showError("Select criteria (ex: By SMILES)");
+			return false;
+		}
 
-    		//JSDraw.get("viewPanel").setMolfile(moleculeArray[i].molString);
-    		
-    		var mol = Kekule.IO.loadFormatData(moleculeArray[i].molString, 'mol');
-    		chemViewer.setChemObj(mol);
-    		
-    		currentSelectedRow = i;
+		var mol = chemComposer.getChemObj();
+		
+		//composer.exportObjs(Kekule.Molecule)[0];
+		var formula = "";
+		var molStringFile = "";
+		var smiles = "";
 
-    }//---------------------------------------------------------------------
-    function showError(errorText)
-    {
-       	 var redText  = "";
-    	 
-    	 if(errorText.length > 0)
-    	 {
-    	   	 redText = "<div style='color:red'>"+errorText+"</div>";
-    	 }
-  	   
-    	 document.getElementById("moleculesPanel").innerHTML = redText;
-    	
-    }//---------------------------------------------------------------------
-    function showGood(msg)
-    {
-    	
-    	 var text  = "<div style='color:green'>"+msg+"</div>";
-  	   
-  	     document.getElementById("moleculesPanel").innerHTML = text;
-    	
-    }//---------------------------------------------------------------------
-    function showRequired(msg)
-    {
-    	var text  = "";
-    	
-    	if(msg.length > 0)
-    	{
-    	   	text = "<div style='color:red'>"+msg+" is required</div>";
-    	}
-   	   
- 	    document.getElementById("requiredPanel").innerHTML = text;
-    }
-    </script>
+		var weight = -1;
+		//mol.getMolWeight();
+		var source = document.getElementById("source").value;
+		var name = document.getElementById("moleculeName").value;
 
-	<script  type="text/javascript">
-		function clear()
-		{
-			  showRequired("");
-			  showError("");
-			  document.getElementById("copyViewerWarningPanel").innerHTML = "";
+		if (searchCriteria == "BySourceAndName") {
+			if (source == null || source.length == 0) {
+				return showRequired("Source");
+			}
+
+			if (name == null || name.length == 0) {
+				return showRequired("Name");
+			}
+		} 
+		else {
+			smiles = Kekule.IO.saveFormatData(mol, 'smi');
+			
+			if (smiles == null || smiles.length == 0) {
+					return showRequired("Drawn valid molecule in editor. For example, try benzene.");
+		    } 
+			
+			
+			try
+			{
+				 var firstMolecule = getCurrMol();
+				 formula = firstMolecule.calcFormula().getText();
+			}
+			catch(e)
+			{
+				console.log("ERROR:"+e);
+			}
+			
+			
+			molStringFile = Kekule.IO.saveFormatData(mol, 'mol');
+			
+		}
+
+		document.getElementById("moleculesPanel").innerHTML = "<img src='common/images/progress.gif'/>";
+		currentSelectedRow = 0;
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST", "findMolecules", true);
+		xhttp.setRequestHeader("Content-Type", "application/json");
+
+		var khemCriteria = {
+			"structureCriteria" : {
+				"molString" : molStringFile,
+				"weight" : weight,
+				"formula" : formula,
+				"searchType" : searchCriteria,
+				"smiles" : smiles,
+				"source" : source,
+				"name" : name
+			}
+		};
+
+		var json = JSON.stringify(khemCriteria);
+
+		//Response handler
+		xhttp.onreadystatechange = function() {
+			if (this.readyState == 4 && this.status == 200) {
+				//Handle not records found
+				if (this.responseText == null || this.responseText.length == 0) {
+					document.getElementById("moleculesPanel").innerHTML = "No data found";
+					return;
+				}
+
+				parent.moleculeArray = JSON.parse(this.responseText);
+				var tableHtml = "";
+
+				var rowClass = "odd";
+
+				//loop thru molecules
+				for (i = 0; i < parent.moleculeArray.length; i++) {
+
+					if (i % 2 == 0)
+						rowClass = "even";
+					else
+						rowClass = "odd";
+
+					tableHtml += "<tr class=" + rowClass + " id=moleRow" + i
+							+ " onclick='viewMolecule(" + i + ")'>" + "<td>"
+							+ parent.moleculeArray[i].sourceCode + "</td>"
+							+ "<td>" + parent.moleculeArray[i].name + "</td>"
+							+ "<td>" + parent.moleculeArray[i].formula
+							+ "</td>" + "<td>" + parent.moleculeArray[i].weight
+							+ "</td>";
+
+					//add mol file
+					tableHtml += "</tr>";
+				}
+
+				tableHtml = "<table class=\"resultTable\">"
+						+ "<thead><tr><th>source</th><th>name</th><th>formula</th><th>weight</th></tr></thread>"
+						+ "<tbody>" + tableHtml + "</tbody>" + "</table>";
+
+				document.getElementById("moleculesPanel").innerHTML = tableHtml;
+
+			}//end of if
+			else if (this.readyState == 4 && this.status != 200) {
+				//display error
+				var errorText = "<div style='color:red'>" + this.responseText
+						+ "</div>";
+				document.getElementById("moleculesPanel").innerHTML = errorText;
+			}
+		};
+
+		xhttp.send(json);
+
+		return 0;
+	}//----------------------------------------------------------
+	function copyViewerToEditor() {
+		//JSDraw.get("test").setHtml(JSDraw.get("viewPanel").getHtml());
+
+		var viewMol = chemViewer.getChemObj();
+		if (viewMol === undefined) {
+			var redText = "Please selected a molecule first in the search results";
+
+			document.getElementById("copyViewerWarningPanel").innerHTML = redText;
+			return false;
+		} else {
+			document.getElementById("copyViewerWarningPanel").innerHTML = "";
+		}
+
+		document.getElementById("source").value = moleculeArray[currentSelectedRow].sourceCode;
+		document.getElementById("moleculeName").value = moleculeArray[currentSelectedRow].name;
+		document.getElementById("mw").innerHTML = moleculeArray[currentSelectedRow].weight;
+		document.getElementById("formula").innerHTML = moleculeArray[currentSelectedRow].formula;
+
+		chemComposer.setChemObj(viewMol);
+
+	}
+</script>
+</head>
+<body onload="init()">
+
+	<!-- LOGO -->
+	<img src="common/images/pivotal.png" />
+	<img src="common/images/logo.png" />
+	<br />
+	<br />
+	<div>
+		<form name="searchCriterForm" onsubmit="return false;">
+			<input type="radio" name="how" value="BySMILES" checked="checked">
+			By SMILE <input type="radio" name="how" value="ByWEIGHT"> By
+			Weight <input type="radio" name="how" value="ByFORMULA"> By
+			Formula <input type="radio" name="how" value="BySourceAndName">
+			By Source and Name
+			<button onclick="findMolecules()">Find</button>
+		</form>
+		<br />
+		<!--  -->
+		<table>
+			<tr>
+				<td>Source:</td>
+				<td><input id="source" type="text" name="source"></input></td>
+				<td>&nbsp;</td>
+				<td>Name:</td>
+				<td><input id="moleculeName" type="text" name="moleculeName"></input></td>
+			</tr>
+			<tr>
+				<td colspan="5"><div id="requiredPanel"></div></td>
+			</tr>
+		</table>
+
+		<div>
+			<!-- data-chem-obj="url(#chemDoc1)" -->
+			<div id="chemComposer" style="width: 650px; height: 400px"></div>
+		</div>
+
+
+		<!-- ============================== -->
+		<!--  Molecule viewer -->
+		<!-- border:1px solid gray -->
+		<div
+			style="z-index: 10; position: fixed; left: 670px; top: 184px; width: 230px; height: 230px; border: 1px solid gray"
+			viewonly popup dataformat='molfile' data=''>
+			<div id="viewPanel"></div>
+			<button onclick='copyViewerToEditor()'>&lt;&lt;</button>
+			<br>
+			<div id="copyViewerWarningPanel" style="color: red"></div>
+		</div>
+
+
+		<!-- ============================== -->
+		<p>
+			<button onclick="saveMolecule();">&nbsp;Save&nbsp;</button>
+			<button onclick="deleteMolecule();">&nbsp;Delete&nbsp;</button>
+			<button onclick="clearScreen();">&nbsp;Clear&nbsp;</button>
+		</p>
+		<!-- ============================== -->
+
+		<br />
+
+		<p>
+			Mol. Weight: <span id='mw' style='width: 120px; font-weight: bold'></span>
+			Formula: <span id='formula' style='width: 300px; font-weight: bold'></span>
+		</p>
+		<script type="text/javascript">
+			function getSearchCriteria(radios) {
+				var howRadios = document.forms["searchCriterForm"]["how"];
+
+				for (i = 0; i < howRadios.length; ++i) {
+					if (howRadios[i].checked)
+						return howRadios[i].value;
+				}
+				return null;
+			}
+		</script>
+
+	</div>
+
+	<br />
+	<div id="moleculesPanel"></div>
+
+	<script type="text/javascript">
+		var moleculeArray = [ {} ];
+		var currentSelectedRow = 0;
+
+		function viewMolecule(i) {
+			//alert(moleculeArray[i].molString);
+			var previousRow = document.getElementById('moleRow'
+					+ currentSelectedRow);
+
+			if (currentSelectedRow % 2 == 1)
+				previousRow.className = 'odd';
+			else
+				previousRow.className = 'even';
+
+			var row = document.getElementById('moleRow' + i);
+
+			row.className = "select";
+
+			//JSDraw.get("viewPanel").setMolfile(moleculeArray[i].molString);
+
+			var mol = Kekule.IO.loadFormatData(moleculeArray[i].molString,
+					'mol');
+			chemViewer.setChemObj(mol);
+
+			currentSelectedRow = i;
+
+		}//---------------------------------------------------------------------
+		function showError(errorText) {
+			var redText = "";
+
+			if (errorText.length > 0) {
+				redText = "<div style='color:red'>" + errorText + "</div>";
+			}
+
+			document.getElementById("moleculesPanel").innerHTML = redText;
+
+		}//---------------------------------------------------------------------
+		function showGood(msg) {
+
+			var text = "<div style='color:green'>" + msg + "</div>";
+
+			document.getElementById("moleculesPanel").innerHTML = text;
+
+		}//---------------------------------------------------------------------
+		function showRequired(msg) {
+			var text = "";
+
+			if (msg.length > 0) {
+				text = "<div style='color:red'>" + msg + " is required</div>";
+			}
+
+			document.getElementById("requiredPanel").innerHTML = text;
+		}
+	</script>
+
+	<script type="text/javascript">
+		function clear() {
+			showRequired("");
+			showError("");
+			document.getElementById("copyViewerWarningPanel").innerHTML = "";
 		}//----------------------------------------------------------
+		function clearScreen() {
+			clear();
+
+			document.getElementById("source").value = "";
+			document.getElementById("moleculeName").value = "";
+			chemComposer.setChemObj(new Kekule.Molecule());
+			chemViewer.setChemObj(new Kekule.Molecule());
+		}
 		/**
 		 * Save the molecule
 		 */
-		function saveMolecule()
-		{		
-			
-			  clear();
-			  var source = document.getElementById("source").value;
-			  if(source == null || source.length == 0)
-			  {
-				  return showRequired("Source");
-			  }
-			  
-			  var name = document.getElementById("moleculeName").value;
-			  if(name == null || name.length == 0)
-			  {
-				  return showRequired("Name");
-			  }
-			
-			   var mol = chemComposer.getChemObj();
-			   var firstMolecule = chemComposer.exportObjs(Kekule.Molecule)[0];
-			   var molFormula  = firstMolecule.calcFormula().getText();
-			   var molStringFile = Kekule.IO.saveFormatData(mol, 'mol');
-			   var name =  document.getElementById("moleculeName").value;
-			   var smiles = Kekule.IO.saveFormatData(mol, 'smi');
-			   if(smiles == null || smiles.length == 0)
-			   {
-					  return showRequired("Least one valid drawn molecule in editor");
-			   }
-			   
-			   //create molecule object
-			   var molecule = {
-					   canonicalSMILES : smiles,
-					   sourceCode : source,
-					   formula : molFormula,
-					   molKey : smiles,
-					   molString : molStringFile,
-					   name : name
-			   }
-   
-				var xhttp = new XMLHttpRequest();
-				  xhttp.open("POST", "saveMolecule",  true);
-				  xhttp.setRequestHeader("Content-Type", "application/json");
-				  xhttp.onreadystatechange = function() {
-				        if (this.readyState == 4 && this.status == 200) 
-				        {
-				        	var outMolecule = JSON.parse(this.responseText);
-				        	document.getElementById("mw").innerHTML = outMolecule.weight;
-				        	document.getElementById("formula").innerHTML = outMolecule.formula;
-				        	
-				        	showGood("Saved");
-				        }
-				        else if (this.readyState == 4 && this.status != 200) 
-					    {
-					    	   showError(this.responseText);
-					    }					    
-				  };
-				  
-				  var json = JSON.stringify(molecule);
-				  //alert("json:"+json);
-				  
-				  xhttp.send(json);
-		    }//---------------------------------------------------------------------
+		function saveMolecule() {
 
+			clear();
+			var source = document.getElementById("source").value;
+			if (source == null || source.length == 0) {
+				return showRequired("Source");
+			}
+
+			var name = document.getElementById("moleculeName").value;
+			if (name == null || name.length == 0) {
+				return showRequired("Name");
+			}
+
+			var mol = chemComposer.getChemObj();
+
+			var smiles = Kekule.IO.saveFormatData(mol, 'smi');
+			if (smiles == null || smiles.length == 0) {
+				return showRequired("Least one valid drawn molecule in editor");
+			}
+
+			var firstMolecule = getCurrMol();
+			var molFormula = "";
+			
+			try
+			{
+				 molFormula = firstMolecule.calcFormula().getText();
+			}
+			catch(e)
+			{
+				console.log("ERROR:"+e);
+			}
+			
+			var molStringFile = Kekule.IO.saveFormatData(mol, 'mol');
+			var name = document.getElementById("moleculeName").value;
+
+			//create molecule object
+			var molecule = {
+				canonicalSMILES : smiles,
+				sourceCode : source,
+				formula : molFormula,
+				molKey : smiles,
+				molString : molStringFile,
+				name : name
+			}
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "saveMolecule", true);
+			xhttp.setRequestHeader("Content-Type", "application/json");
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					var outMolecule = JSON.parse(this.responseText);
+					document.getElementById("mw").innerHTML = outMolecule.weight;
+					document.getElementById("formula").innerHTML = outMolecule.formula;
+
+					showGood("Saved");
+				} else if (this.readyState == 4 && this.status != 200) {
+					showError(this.responseText);
+				}
+			};
+
+			var json = JSON.stringify(molecule);
+			//alert("json:"+json);
+
+			xhttp.send(json);
+		}//---------------------------------------------------------------------
+		function deleteMolecule() {
+
+			clear();
+			var source = document.getElementById("source").value;
+			if (source == null || source.length == 0) {
+				return showRequired("Source");
+			}
+
+			var name = document.getElementById("moleculeName").value;
+			if (name == null || name.length == 0) {
+				return showRequired("Name");
+			}
+
+			//create molecule object
+			var molecule = {
+				sourceCode : source,
+				name : name
+			}
+
+			var xhttp = new XMLHttpRequest();
+			xhttp.open("POST", "deleteMolecule", true);
+			xhttp.setRequestHeader("Content-Type", "application/json");
+			xhttp.onreadystatechange = function() {
+				if (this.readyState == 4 && this.status == 200) {
+					showGood("Deleted");
+				} else if (this.readyState == 4 && this.status != 200) {
+					showError(this.responseText);
+				}
+			};
+
+			var json = JSON.stringify(molecule);
+
+			xhttp.send(json);
+		}//---------------------------------------------------------------------
 	</script>
 </body>
 

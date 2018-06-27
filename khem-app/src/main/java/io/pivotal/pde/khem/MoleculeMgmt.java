@@ -107,6 +107,7 @@ public class MoleculeMgmt implements MoleculeService
 				break;
 
 			  case BySourceAndName: 
+				 
 				  String source = structureCriteria.getSource();
 				  if (source == null || source.length() == 0)
 					throw new IllegalArgumentException("source is required");
@@ -115,11 +116,13 @@ public class MoleculeMgmt implements MoleculeService
 				  if (name == null || name.length() == 0)
 					throw new IllegalArgumentException("name is required");
 				  
-				  Molecule molecule = this.moleculesRegion.get(generateId(source, name));
-				  if(molecule == null)
-					  return null;
+				  Molecule molecule = this.findBySourceCodeAndName(
+				  				source, name);
 				  
-				  moles = Collections.singleton(molecule);
+				  if(molecule == null)
+					  moles = null;
+				  else
+					  moles = Collections.singleton(molecule);
 
 				  break;
 			  case ByWEIGHT:
@@ -135,7 +138,7 @@ public class MoleculeMgmt implements MoleculeService
 			  case ByFORMULA:
 				  String formula = structureCriteria.getFormula();
 				  if (formula == null || formula.length() == 0)
-					throw new IllegalArgumentException("formula is required");
+					return null;
 				  
 				  moles = this.querierService.query("select * from /molecules where formula = '"+formula+"'");
 			   break;
@@ -153,7 +156,32 @@ public class MoleculeMgmt implements MoleculeService
 		
 		return moles;
 	}//------------------------------------------------
+	/**
+	 * Find the molecule
+	 * @param source the molecule source 
+	 * @param name label/name
+	 * @return Molecule
+	 */
+	public Molecule findBySourceCodeAndName(String source, String name)
+	{
 
+		Molecule molecule = this.moleculesRegion.get(generateId(source, name));
+		  if(molecule == null)
+			  return null;
+		  
+		  return molecule;
+	}//------------------------------------------------
+	/**
+	 * Delete the molecule
+	 * @param molecule the molecule to delete
+	 */
+	public void deleteMolecule(Molecule molecule)
+	{
+		if(molecule == null)
+			return;
+		
+		this.moleculesRegion.remove(generateId(molecule.getSourceCode(), molecule.getName()));
+	}//------------------------------------------------
 	private String generateId(String sourceCode, String name)
 	{
 		return new StringBuilder().append(sourceCode)
@@ -165,4 +193,6 @@ public class MoleculeMgmt implements MoleculeService
 	
 	@Autowired
 	QuerierService querierService;
+
+	
 }

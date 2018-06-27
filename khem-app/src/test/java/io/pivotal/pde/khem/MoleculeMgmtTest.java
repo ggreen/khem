@@ -113,6 +113,34 @@ public class MoleculeMgmtTest
 		assertNotNull(molecules);
 		
 	}
+	
+	@Test
+	public void testDelete()
+	throws Exception
+	{
+		Molecule mole = null;
+		mgmt.deleteMolecule(null);
+		
+		mole = new Molecule();
+		mgmt.deleteMolecule(mole);
+		
+		Molecule out = mgmt.findBySourceCodeAndName(mole.getSourceCode(),mole.getName());
+		
+		assertNull(out);
+		mole.setName("valid");
+		mole.setSourceCode("valid");
+		mole.setCanonicalSMILES("C");
+		mole.setMolString(IO.readFile("src/test/resources/sdf/acenaphthylene.mol"));
+		mgmt.saveMolecule(mole);
+		
+		out = mgmt.findBySourceCodeAndName(mole.getSourceCode(),mole.getName());
+		assertNotNull(out);
+		
+		mgmt.deleteMolecule(mole);
+		
+		out = mgmt.findBySourceCodeAndName(mole.getSourceCode(),mole.getName());
+		
+	}
 	private static Molecule molecule = new Molecule();
 	private static MoleculeMgmt mgmt = new MoleculeMgmt();
 }
