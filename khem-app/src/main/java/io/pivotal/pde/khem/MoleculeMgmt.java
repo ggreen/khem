@@ -74,6 +74,8 @@ public class MoleculeMgmt implements MoleculeService
 			
 		joelib2.molecule.Molecule joeMol = JOELib.toMolecule(molString);
 		 double weight = Math.round(JOELib.toWeight(joeMol)*100)/100D;
+		 
+		 System.out.println("weight:"+weight);
 		return Double.valueOf(weight);
 	}
 	/**
@@ -126,6 +128,8 @@ public class MoleculeMgmt implements MoleculeService
 				  if (weight == null || Double.valueOf(-1).equals(weight))
 					  weight = toMolWeight(structureCriteria.getMolString());
 
+				  System.out.println("weight:"+weight);
+				  
 				  moles = this.querierService.query("select * from /molecules where weight = "+weight);
 				break;
 			  case ByFORMULA:
